@@ -1,6 +1,19 @@
-# 网盘智能识别助手
+<p align="center">
+  <a href="https://www.baiduyun.wiki">
+    <img width="160" src="https://www.baiduyun.wiki/logo.png" alt="网盘智能识别助手">
+  </a>
+</p>
 
-【网盘智能识别助手】可以智能识别网页中选中文字👉一般背景为蓝色👈里的 **网盘链接** 和 **提取码/密码**，提示并**自动填写提取码**。
+<h1 align="center">网盘智能识别助手</h1>
+
+<p align="center">
+  <img src="https://img.shields.io/badge/tamperMonkey-v4.8-brightgreen.svg" alt="tampermonkey">
+  <img src="https://img.shields.io/badge/chrome%20x64-v76.0-brightgreen.svg" alt="chrome">
+  <img src="https://img.shields.io/badge/safari%20-v12.0-brightgreen.svg" alt="safari">
+  <img src="https://img.shields.io/badge/platform-Windows%20%7C%20Mac%20%7C%20Android-blue.svg" alt="platform">
+</p>
+
+👉 【网盘智能识别助手】可以智能识别网页中选中文字👉一般背景为蓝色👈里的 **网盘链接** 和 **提取码/密码**，提示并**自动填写提取码**。
 
 ![](https://i.loli.net/2021/03/06/Y3a6hEjzHxqXPWG.png)
 
@@ -17,30 +30,6 @@
 2. 若包含网盘链接和提取码，上方会出现提示，点击打开会**自动打开链接并填写提取码**。
 
 ![](https://i.loli.net/2021/03/05/oqMDRTiIcBlYudv.png)
-
-## 🎨 GIF演示
-
-图中网盘链接均来自Google搜索引擎，点击查看对应网盘识别动图：
-
-百度网盘
-
-![](https://i.loli.net/2021/03/05/7NPZIk8buGmhF6S.gif)
-
-蓝奏云
-
-![](https://i.loli.net/2021/03/05/J4dTB5kwQnDab6R.gif)
-
-腾讯微云
-
-![](https://i.loli.net/2021/03/05/pOj4exrZcKhWiM1.gif)
-
-天翼云
-
-![](https://i.loli.net/2021/03/05/T7oku1FDbW6Kjye.gif)
-
-和彩云
-
-![](https://i.loli.net/2021/03/05/9k8GUqbDEOKxPor.gif)
 
 ## 📖 更新日志
 
@@ -70,42 +59,7 @@
 
 安装好识别助手后，可以**选中**下方任意链接进行测试，以下仅是部分。**识别成功率高达99%！**
 
-**百度网盘：**
-
-<blockcode>
-pan.baidu.com/s/1hGhQihBGJ1UUOeDdyne6IQ key:bit5
-https://pan.baidu.com/s/1hGhQihBGJ1UUOeDdyne6IQ 密码:bit5
-链接:https://pan.baidu.com/s/1hGhQihBGJ1UUOeDdyne6IQ 提取码:bit5 复制这段内容后打开百度网盘手机App，操作更方便哦
-</blockcode>
-
-**蓝奏云：**
-
-<blockcode>
-https://wws.lanzous.com/i0WBjmd35pi 密码:6vth
-https://alone1997.lanzous.com/izzL7lsnnuf 密码:1mxz
-链接：https://wws.lanzous.com/i4seKmef2le 密码：666
-</blockcode>
-
-
-**腾讯微云：**
-
-<blockcode>
-https://share.weiyun.com/9AoT5qbY 密码：c99577
-</blockcode>
-
-**天翼云：**
-
-<blockcode>
-https://cloud.189.cn/t/biUzYvUFr2ya 密码：3qs9
-https://cloud.189.cn/t/biUzYvUFr2ya (访问码:3qs9)
-</blockcode>
-
-**和彩云：**
-
-<blockcode>
-链接:https://caiyun.139.com/m/i?0a5CriEPmz6zU
-提取码:7MZ2
-</blockcode>
+[点击查看](https://www.baiduyun.wiki/tool/install-panai.html)
 
 ## 👻 常见问题
 
@@ -128,6 +82,30 @@ A：助手免费开源，代码均在本地运行，不会保留任何您的网�
 Q5：智能识别过程会耗费资源吗？
 
 A：根据作者多次测试，平均识别时间：1毫秒-3毫秒，基本上不占用系统资源。
+
+## 🎨 GIF演示
+
+图中网盘链接均来自Google搜索引擎，点击查看对应网盘识别动图：
+
+百度网盘
+
+![](https://i.loli.net/2021/03/05/7NPZIk8buGmhF6S.gif)
+
+蓝奏云
+
+![](https://i.loli.net/2021/03/05/J4dTB5kwQnDab6R.gif)
+
+腾讯微云
+
+![](https://i.loli.net/2021/03/05/pOj4exrZcKhWiM1.gif)
+
+天翼云
+
+![](https://i.loli.net/2021/03/05/T7oku1FDbW6Kjye.gif)
+
+和彩云
+
+![](https://i.loli.net/2021/03/05/9k8GUqbDEOKxPor.gif)
 
 ## 💽  BUG反馈
 

@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name              网盘智能识别助手
 // @namespace         https://github.com/syhyz1990/panAI
-// @version           1.0.3
+// @version           1.0.5
 // @author            YouXiaoHou
 // @icon              https://www.baiduyun.wiki/panai.png
 // @icon64            https://www.baiduyun.wiki/panai.png
@@ -12,7 +12,7 @@
 // @updateURL         https://www.baiduyun.wiki/panai.user.js
 // @downloadURL       https://www.baiduyun.wiki/panai.user.js
 // @match             *://*/*
-// @require           https://cdn.jsdelivr.net/npm/sweetalert2@10.10.0/dist/sweetalert2.all.min.js
+// @require           https://cdn.jsdelivr.net/npm/sweetalert2@10.15.5/dist/sweetalert2.all.min.js
 // @noframes
 // @run-at            document-end
 // @grant             GM_openInTab
@@ -31,12 +31,9 @@
     const version = scriptInfo.version;
 
     let util = {
-        clog(c1, c2, c3) {
-            c1 = c1 ? c1 : '';
-            c2 = c2 ? c2 : '';
-            c3 = c3 ? c3 : '';
+        clog(c) {
             console.group('[网盘智能识别助手]');
-            console.log(c1, c2, c3);
+            console.log(c);
             console.groupEnd();
         },
 
@@ -58,7 +55,7 @@
 
     let opt = {
         baidu: {
-            reg: /((?:https?:\/\/)?(?:yun|pan)\.baidu\.com\/(?:s\/\w*(((-)?\w*)*)?|share\/\S*\d\w*))/,
+            reg: /((?:https?:\/\/)?(?:yun|pan)\.baidu\.com\/(?:s\/\w*(((-)?\w*)*)?|share\/\S*))/,
             host: /(pan|yun)\.baidu\.com/,
             input: ['#accessCode'],
             button: ['#submitBtn'],
@@ -142,55 +139,57 @@
         },
 
         smartIdentify() {
-            if (!Swal.isVisible()) {
-                let text = unsafeWindow.getSelection().toString();
-                if (text !== this.lastText && text !== '') { //选择相同文字或空不识别
-                    this.lastText = text;
-                    //util.clog('当前选中文字：', text);
-                    let linkObj = this.parseLink(text);
-                    let link = linkObj.link;
-                    let name = linkObj.name;
-                    let pwd = this.parsePwd(text);
+            let selection = unsafeWindow.getSelection();
+            let text = selection.toString();
+            if (text !== this.lastText && text !== '') { //选择相同文字或空不识别
+                let start = performance.now();
+                this.lastText = text;
+                //util.clog(`当前选中文字：${text}`);
+                let linkObj = this.parseLink(text);
+                let link = linkObj.link;
+                let name = linkObj.name;
+                let pwd = this.parsePwd(text);
 
-                    if (link) {
-                        if (!/https?:\/\//.test(link)) {
-                            link = 'https://' + link;
-                        }
-                        util.clog(`文字识别结果：${name} 链接：${link} 密码：${pwd}`);
-                        let option = {
-                            toast: true,
-                            showCancelButton: true,
-                            position: 'top',
-                            title: `发现${name}链接`,
-                            text: '是否打开？',
-                            confirmButtonText: '打开',
-                            cancelButtonText: '取消'
-                        };
-                        if (util.getValue('setting_timer_open')) {
-                            option.timer = util.getValue('setting_timer');
-                            option.timerProgressBar = true;
-                        }
-                        util.setValue('setting_success_times', util.getValue('setting_success_times') + 1);
-
-                        Swal.fire(option).then((res) => {
-                            this.lastText = 'lorem&';
-                            unsafeWindow.getSelection().empty();
-                            if (res.isConfirmed || res.dismiss === 'timer') {
-                                if (name === '和彩云') {  //和彩云无法携带参数和Hash
-                                    util.setValue('tmp_caiyun_pwd', pwd);
-                                }
-                                if (pwd) {
-                                    let extra = `${link}?pwd=${pwd}#${pwd}`;
-                                    if (~link.indexOf('?')) {
-                                        extra = `${link}&pwd=${pwd}#${pwd}`;
-                                    }
-                                    GM_openInTab(extra, {active: util.getValue('setting_active_in_front')});
-                                } else {
-                                    GM_openInTab(`${link}`, {active: util.getValue('setting_active_in_front')});
-                                }
-                            }
-                        });
+                if (link) {
+                    if (!/https?:\/\//.test(link)) {
+                        link = 'https://' + link;
                     }
+                    let end = performance.now();
+                    let time = (end - start).toFixed(3);
+                    util.clog(`文本识别结果：${name} 链接：${link} 密码：${pwd} 耗时：${time}毫秒`);
+                    let option = {
+                        toast: true,
+                        showCancelButton: true,
+                        position: 'top',
+                        title: `发现<span style="color: #2778c4;margin: 0 5px;">${name}</span>链接`,
+                        text: '是否打开？',
+                        confirmButtonText: '打开',
+                        cancelButtonText: '关闭'
+                    };
+                    if (util.getValue('setting_timer_open')) {
+                        option.timer = util.getValue('setting_timer');
+                        option.timerProgressBar = true;
+                    }
+                    util.setValue('setting_success_times', util.getValue('setting_success_times') + 1);
+
+                    Swal.fire(option).then((res) => {
+                        this.lastText = 'lorem&';
+                        selection.empty();
+                        if (res.isConfirmed || res.dismiss === 'timer') {
+                            if (name === '和彩云') {  //和彩云无法携带参数和Hash
+                                util.setValue('tmp_caiyun_pwd', pwd);
+                            }
+                            if (pwd) {
+                                let extra = `${link}?pwd=${pwd}#${pwd}`;
+                                if (~link.indexOf('?')) {
+                                    extra = `${link}&pwd=${pwd}#${pwd}`;
+                                }
+                                GM_openInTab(extra, {active: util.getValue('setting_active_in_front')});
+                            } else {
+                                GM_openInTab(`${link}`, {active: util.getValue('setting_active_in_front')});
+                            }
+                        }
+                    });
                 }
             }
         },
@@ -294,7 +293,7 @@
         },
 
         registerMenuCommand() {
-            GM_registerMenuCommand('已成功识别：' + util.getValue('setting_success_times') + '次', () => {
+            GM_registerMenuCommand('已识别：' + util.getValue('setting_success_times') + '次', () => {
                 this.addStyle();
                 Swal.fire({
                     showCancelButton: true,
@@ -378,8 +377,8 @@
                 });
             });
 
-            GM_registerMenuCommand(`当前版本：v${version}`, () => {
-                GM_openInTab('https://www.baiduyun.wiki/tool/install-panai.html', {active: true});
+            GM_registerMenuCommand(`检查更新：v${version}`, () => {
+                GM_openInTab('https://www.baiduyun.wiki/panai.user.js', {active: true});
             });
         },
 

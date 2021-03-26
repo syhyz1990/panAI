@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name              网盘智能识别助手
 // @namespace         https://github.com/syhyz1990/panAI
-// @version           1.0.5
+// @version           1.1.0
 // @author            YouXiaoHou
 // @icon              https://www.baiduyun.wiki/panai.png
 // @icon64            https://www.baiduyun.wiki/panai.png
@@ -12,13 +12,11 @@
 // @updateURL         https://www.baiduyun.wiki/panai.user.js
 // @downloadURL       https://www.baiduyun.wiki/panai.user.js
 // @match             *://*/*
-// @require           https://cdn.jsdelivr.net/npm/sweetalert2@10.15.5/dist/sweetalert2.all.min.js
-// @noframes
+// @require           https://cdn.jsdelivr.net/npm/sweetalert2@10.15.6/dist/sweetalert2.min.js
 // @run-at            document-end
 // @grant             GM_openInTab
 // @grant             unsafeWindow
 // @grant             GM_info
-// @grant             GM_addStyle
 // @grant             GM_setValue
 // @grant             GM_getValue
 // @grant             GM_registerMenuCommand
@@ -27,8 +25,27 @@
 (function () {
     'use strict';
 
-    const scriptInfo = GM_info.script;
-    const version = scriptInfo.version;
+    const fixedStyle = ['www.baidu.com']; //弹出框错乱的网站css插入到<html>而非<head>
+    const customClass = {
+        container: 'panai-container',
+        popup: 'panai-popup',
+        header: 'panai-header',
+        title: 'panai-title',
+        closeButton: 'panai-close',
+        icon: 'panai-icon',
+        image: 'panai-image',
+        content: 'panai-content',
+        htmlContainer: 'panai-html',
+        input: 'panai-input',
+        inputLabel: 'panai-inputLabel',
+        validationMessage: 'panai-validation',
+        actions: 'panai-actions',
+        confirmButton: 'panai-confirm',
+        denyButton: 'panai-deny',
+        cancelButton: 'panai-cancel',
+        loader: 'panai-loader',
+        footer: 'panai-footer'
+    };
 
     let util = {
         clog(c) {
@@ -50,12 +67,32 @@
 
         setValue(name, value) {
             GM_setValue(name, value);
+        },
+        include(str, arr) {
+            for (let i = 0, l = arr.length; i < l; i++) {
+                let val = arr[i];
+                if (val !== '' && str.toLowerCase().indexOf(val.toLowerCase()) > -1) {
+                    return true;
+                }
+            }
+            return false;
+        },
+        addStyle(id, tag, css) {
+            tag = tag || 'style';
+            let doc = document, styleDom = doc.getElementById(id);
+            if (styleDom) return;
+            let style = doc.createElement(tag);
+            style.rel = 'stylesheet';
+            style.id = id;
+            tag === 'style' ? style.innerHTML = css : style.href = css;
+            let root = this.include(location.href, fixedStyle);
+            root ? doc.documentElement.appendChild(style) : doc.getElementsByTagName('head')[0].appendChild(style);
         }
     };
 
     let opt = {
         baidu: {
-            reg: /((?:https?:\/\/)?(?:yun|pan)\.baidu\.com\/(?:s\/\w*(((-)?\w*)*)?|share\/\S*))/,
+            reg: /((?:https?:\/\/)?(?:yun|pan)\.baidu\.com\/(?:s\/\w*(((-)?\w*)*)?|share\/\S{4,}))/,
             host: /(pan|yun)\.baidu\.com/,
             input: ['#accessCode'],
             button: ['#submitBtn'],
@@ -99,13 +136,6 @@
 
     let main = {
         lastText: "lorem&",
-
-        init() {
-            this.initValue();
-            this.autoFillPassword();
-            this.addPageListener();
-            this.registerMenuCommand();
-        },
 
         //初始化配置数据
         initValue() {
@@ -162,9 +192,10 @@
                         showCancelButton: true,
                         position: 'top',
                         title: `发现<span style="color: #2778c4;margin: 0 5px;">${name}</span>链接`,
-                        text: '是否打开？',
+                        html: `<span style="font-size: 0.8em;">${!!pwd ? '密码：' + pwd : '是否打开？'}</span>`,
                         confirmButtonText: '打开',
-                        cancelButtonText: '关闭'
+                        cancelButtonText: '关闭',
+                        customClass
                     };
                     if (util.getValue('setting_timer_open')) {
                         option.timer = util.getValue('setting_timer');
@@ -197,6 +228,8 @@
         //正则解析网盘链接
         parseLink(text) {
             let obj = {name: '', link: ''};
+            let reg = /[\u4e00-\u9fa5()（）,，]/g;
+            text = text.replace(reg, "");
             for (let name in opt) {
                 let val = opt[name];
                 if (val.reg.test(text)) {
@@ -211,7 +244,7 @@
 
         //正则解析提取码
         parsePwd(text) {
-            let reg = /(?<=\s*(密|提取|访问|密|提取|訪問|key|password)[码碼]?[：:]?\s*)[A-Za-z0-9]{3,8}/i;
+            let reg = /(?<=\s*(密|提取|访问|密|提取|訪問|key|password|pwd)[码碼]?[：:]?\s*)[A-Za-z0-9]{3,8}/i;
             if (reg.test(text)) {
                 let match = text.match(reg);
                 return match[0];
@@ -277,7 +310,8 @@
                         showConfirmButton: false,
                         title: '识别到密码！已自动帮您填写',
                         icon: 'success',
-                        timer: 1500,
+                        timer: 2000,
+                        customClass
                     });
                     input.value = pwd;
                     input.dispatchEvent(new Event('input'));
@@ -294,68 +328,37 @@
 
         registerMenuCommand() {
             GM_registerMenuCommand('已识别：' + util.getValue('setting_success_times') + '次', () => {
-                this.addStyle();
                 Swal.fire({
                     showCancelButton: true,
-                    title: '确定要重置统计次数吗？',
+                    title: '确定要重置识别次数吗？',
                     icon: 'warning',
-                    text: '点击确定页面刷新后将重新统计',
                     confirmButtonText: '确定',
-                    cancelButtonText: '取消'
+                    cancelButtonText: '取消',
+                    customClass
                 }).then((res) => {
                     this.lastText = 'lorem&';
                     if (res.isConfirmed) {
                         util.setValue('setting_success_times', 0);
+                        history.go(0);
                     }
                 });
             });
             GM_registerMenuCommand('设置', () => {
-                this.addStyle();
-                let dom = '';
-                if (util.getValue('setting_auto_click_btn')) {
-                    dom += '<label style="display: flex;align-items: center;justify-content: space-between;padding-top: 20px;">填写网盘密码后自动提交<input type="checkbox" id="S-Auto" checked style="width: 16px;height: 16px;"></label>';
-                } else {
-                    dom += '<label style="display: flex;align-items: center;justify-content: space-between;padding-top: 20px;">填写网盘密码后自动提交<input type="checkbox" id="S-Auto" style="width: 16px;height: 16px;"></label>';
-                }
-                if (util.getValue('setting_active_in_front')) {
-                    dom += '<label style="display: flex;align-items: center;justify-content: space-between;padding-top: 20px;">前台打开并激活网盘标签页<input type="checkbox" id="S-Active" checked style="width: 16px;height: 16px;"></label>';
-                } else {
-                    dom += '<label style="display: flex;align-items: center;justify-content: space-between;padding-top: 20px;">前台打开并激活网盘标签页<input type="checkbox" id="S-Active" style="width: 16px;height: 16px;"></label>';
-                }
-                if (util.getValue('setting_timer_open')) {
-                    dom += '<label style="display: flex;align-items: center;justify-content: space-between;padding-top: 20px;">倒计时结束后自动打开链接 <input type="checkbox" id="S-Timer-Open" checked style="width: 16px;height: 16px;"></label>';
-                } else {
-                    dom += '<label style="display: flex;align-items: center;justify-content: space-between;padding-top: 20px;">倒计时结束后自动打开链接 <input type="checkbox" id="S-Timer-Open" style="width: 16px;height: 16px;"></label>';
-                }
-                dom += `<label style="display: flex;align-items: center;justify-content: space-between;padding-top: 20px;"><span>倒计时 <span id="Timer-Value">（${util.getValue('setting_timer') / 1000}秒）</span></span><input type="range" id="S-Timer" min="500" max="10000" step="500" value="${util.getValue('setting_timer')}" style="width: 200px;"></label>`;
-                dom = '<div style="font-size: 1em;">' + dom + '</div>';
+                let html = `<div style="font-size: 1em;">
+                              <label class="panai-setting-label">自动填写识别的密码<input type="checkbox" id="S-Auto" ${util.getValue('setting_auto_click_btn') ? 'checked' : ''} class="panai-setting-checkbox"></label>
+                              <label class="panai-setting-label">前台打开网盘标签页<input type="checkbox" id="S-Active" ${util.getValue('setting_active_in_front') ? 'checked' : ''} 
+                              class="panai-setting-checkbox"></label>
+                              <label class="panai-setting-label">倒计时结束自动打开<input type="checkbox" id="S-Timer-Open" ${util.getValue('setting_timer_open') ? 'checked' : ''} class="panai-setting-checkbox"></label>
+                              <label class="panai-setting-label"><span>倒计时 <span id="Timer-Value">（${util.getValue('setting_timer') / 1000}秒）</span></span><input type="range" id="S-Timer" min="500" max="10000" step="500" value="${util.getValue('setting_timer')}" style="width: 200px;"></label>
+                            </div>`;
                 Swal.fire({
-                    title: '助手配置',
-                    html: dom,
+                    title: '识别助手配置',
+                    html,
                     icon: 'info',
                     showCloseButton: true,
                     confirmButtonText: '保存',
-                    footer: '<div style="font-size: 1em;"><div style="text-align: center;">点击这里查看 <a href="https://www.baiduyun.wiki/tool/install-panai.html" target="_blank">使用说明</a>，助手免费开源</div><div style="margin-top: 5px;font-size: 0.8em;text-align: center;color: #999;">（如果配置界面出现错乱，请刷新网页后重新打开）</div></div>',
-                    customClass: {
-                        container: 'panai-container',
-                        popup: 'panai-popup',
-                        header: 'panai-header',
-                        title: 'panai-title',
-                        closeButton: 'panai-close',
-                        icon: 'panai-icon',
-                        image: 'panai-image',
-                        content: 'panai-content',
-                        htmlContainer: 'panai-html',
-                        input: 'panai-input',
-                        inputLabel: 'panai-inputLabel',
-                        validationMessage: 'panai-validation',
-                        actions: 'panai-actions',
-                        confirmButton: 'panai-confirm',
-                        denyButton: 'panai-deny',
-                        cancelButton: 'panai-cancel',
-                        loader: 'panai-loader',
-                        footer: 'panai-footer'
-                    },
+                    footer: '<div style="text-align: center;font-size: 1em;">点击查看 <a href="https://www.baiduyun.wiki/tool/install-panai.html" target="_blank">使用说明</a>，助手免费开源，<a href="https://www.baiduyun.wiki/panai.user.js">检查更新</a><svg viewBox="0 0 1024 1024" xmlns="http://www.w3.org/2000/svg" width="14" height="14"><path d="M445.956 138.812L240.916 493.9c-11.329 19.528-12.066 44.214 0 65.123 12.067 20.909 33.898 32.607 56.465 32.607h89.716v275.044c0 31.963 25.976 57.938 57.938 57.938h134.022c32.055 0 57.938-25.975 57.938-57.938V591.63h83.453c24.685 0 48.634-12.803 61.806-35.739 13.172-22.844 12.343-50.016 0-71.386l-199.42-345.693c-13.633-23.58-39.24-39.516-68.44-39.516-29.198 0-54.897 15.935-68.438 39.516z" fill="#d81e06"/></svg></div>',
+                    customClass
                 }).then((res) => {
                     if (res.isConfirmed) {
                         history.go(0);
@@ -376,16 +379,27 @@
                     document.getElementById('Timer-Value').innerText = `（${e.target.value / 1000}秒）`;
                 });
             });
-
-            GM_registerMenuCommand(`检查更新：v${version}`, () => {
-                GM_openInTab('https://www.baiduyun.wiki/panai.user.js', {active: true});
-            });
         },
 
-        //部分网站弹出框错乱处理
-        addStyle() {
-            GM_addStyle(`.panai-popup { font-size: 14px !important; } }`);
-        }
+        addPluginStyle() {
+            let link = 'https://cdn.jsdelivr.net/npm/sweetalert2@10.15.6/dist/sweetalert2.min.css';
+            let style = `
+                .panai-container { z-index: 99999!important }
+                .panai-popup { font-size: 14px !important }
+                .panai-setting-label { display: flex;align-items: center;justify-content: space-between;padding-top: 20px; }
+                .panai-setting-checkbox { width: 16px;height: 16px; }
+            `;
+            util.addStyle('swal-pub-style', 'link', link);
+            util.addStyle('panai-style', 'style', style);
+        },
+
+        init() {
+            this.initValue();
+            this.addPluginStyle();
+            this.autoFillPassword();
+            this.addPageListener();
+            this.registerMenuCommand();
+        },
     };
 
     main.init();

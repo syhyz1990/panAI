@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name              网盘智能识别助手
 // @namespace         https://github.com/syhyz1990/panAI
-// @version           1.1.0
+// @version           1.2.0
 // @author            YouXiaoHou
 // @icon              https://www.baiduyun.wiki/panai.png
 // @icon64            https://www.baiduyun.wiki/panai.png
@@ -13,13 +13,14 @@
 // @downloadURL       https://www.baiduyun.wiki/panai.user.js
 // @match             *://*/*
 // @require           https://cdn.jsdelivr.net/npm/sweetalert2@10.15.6/dist/sweetalert2.min.js
+// @resource          swalStyle https://cdn.jsdelivr.net/npm/sweetalert2@10.15.6/dist/sweetalert2.min.css
 // @run-at            document-end
 // @grant             GM_openInTab
 // @grant             unsafeWindow
-// @grant             GM_info
 // @grant             GM_setValue
 // @grant             GM_getValue
 // @grant             GM_registerMenuCommand
+// @grant             GM_getResourceText
 // ==/UserScript==
 
 (function () {
@@ -68,6 +69,7 @@
         setValue(name, value) {
             GM_setValue(name, value);
         },
+
         include(str, arr) {
             for (let i = 0, l = arr.length; i < l; i++) {
                 let val = arr[i];
@@ -77,6 +79,11 @@
             }
             return false;
         },
+
+        sleep(time) {
+            return new Promise((resolve) => setTimeout(resolve, time));
+        },
+
         addStyle(id, tag, css) {
             tag = tag || 'style';
             let doc = document, styleDom = doc.getElementById(id);
@@ -87,6 +94,14 @@
             tag === 'style' ? style.innerHTML = css : style.href = css;
             let root = this.include(location.href, fixedStyle);
             root ? doc.documentElement.appendChild(style) : doc.getElementsByTagName('head')[0].appendChild(style);
+        },
+
+        isHidden(el) {
+            try{
+                return el.offsetParent === null;
+            } catch (e) {
+                return false
+            }
         }
     };
 
@@ -297,11 +312,12 @@
 
         _doFillAction(inputSelector, buttonSelector, pwd) {
             let maxTime = 10;
-            let ins = setInterval(() => {
+            let ins = setInterval(async () => {
                 maxTime--;
                 let input = document.querySelector(inputSelector[0]) || document.querySelector(inputSelector[1]);
                 let button = document.querySelector(buttonSelector[0]) || document.querySelector(buttonSelector[1]);
-                if (input) {
+
+                if (input && !util.isHidden(input)) {
                     clearInterval(ins);
                     Swal.fire({
                         toast: true,
@@ -316,6 +332,7 @@
                     input.value = pwd;
                     input.dispatchEvent(new Event('input'));
                     if (util.getValue('setting_auto_click_btn')) {
+                        await util.sleep(1000) //1秒后点击按钮
                         button.click();
                     }
                 } else {
@@ -345,7 +362,7 @@
             });
             GM_registerMenuCommand('设置', () => {
                 let html = `<div style="font-size: 1em;">
-                              <label class="panai-setting-label">自动填写识别的密码<input type="checkbox" id="S-Auto" ${util.getValue('setting_auto_click_btn') ? 'checked' : ''} class="panai-setting-checkbox"></label>
+                              <label class="panai-setting-label">填写密码后自动提交<input type="checkbox" id="S-Auto" ${util.getValue('setting_auto_click_btn') ? 'checked' : ''} class="panai-setting-checkbox"></label>
                               <label class="panai-setting-label">前台打开网盘标签页<input type="checkbox" id="S-Active" ${util.getValue('setting_active_in_front') ? 'checked' : ''} 
                               class="panai-setting-checkbox"></label>
                               <label class="panai-setting-label">倒计时结束自动打开<input type="checkbox" id="S-Timer-Open" ${util.getValue('setting_timer_open') ? 'checked' : ''} class="panai-setting-checkbox"></label>
@@ -382,15 +399,18 @@
         },
 
         addPluginStyle() {
-            let link = 'https://cdn.jsdelivr.net/npm/sweetalert2@10.15.6/dist/sweetalert2.min.css';
             let style = `
                 .panai-container { z-index: 99999!important }
                 .panai-popup { font-size: 14px !important }
                 .panai-setting-label { display: flex;align-items: center;justify-content: space-between;padding-top: 20px; }
                 .panai-setting-checkbox { width: 16px;height: 16px; }
             `;
-            util.addStyle('swal-pub-style', 'link', link);
+            util.addStyle('swal-pub-style', 'style', GM_getResourceText('swalStyle'));
             util.addStyle('panai-style', 'style', style);
+        },
+
+        isTopWindow() {
+            return window.self === window.top
         },
 
         init() {
@@ -398,7 +418,7 @@
             this.addPluginStyle();
             this.autoFillPassword();
             this.addPageListener();
-            this.registerMenuCommand();
+            this.isTopWindow() && this.registerMenuCommand();
         },
     };
 

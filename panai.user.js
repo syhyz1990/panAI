@@ -1,11 +1,11 @@
-// ==UserScript==
+ // ==UserScript==
 // @name              网盘智能识别助手
 // @namespace         https://github.com/syhyz1990/panAI
-// @version           1.2.0
+// @version           1.3.2
 // @author            YouXiaoHou
 // @icon              https://www.baiduyun.wiki/panai.png
 // @icon64            https://www.baiduyun.wiki/panai.png
-// @description       AI智能识别选中文字中的【网盘链接】和【提取码】，识别成功打开网盘链接并自动填写提取码，省去手动复制提取码在输入的烦恼。支持百度网盘，腾讯微云，蓝奏云，天翼云，和彩云。
+// @description       AI智能识别选中文字中的【网盘链接】和【提取码】，识别成功打开网盘链接并自动填写提取码，省去手动复制提取码在输入的烦恼。支持百度网盘，腾讯微云，蓝奏云，天翼云，和彩云，迅雷云盘。
 // @license           AGPL
 // @homepage          https://www.baiduyun.wiki/tool/install-panai.html
 // @supportURL        https://github.com/syhyz1990/panAI
@@ -131,7 +131,7 @@
             storage: 'hash'
         },
         tianyi: {
-            reg: /((?:https?:\/\/)?cloud\.189\.cn\/t\/[A-Za-z0-9]+)/,
+            reg: /((?:https?:\/\/)?cloud\.189\.cn\/(?:t\/|web\/share\?code=)?[A-Za-z0-9]+)/,
             host: /cloud\.189\.cn/,
             input: ['.access-code-item #code_txt'],
             button: ['.access-code-item .visit'],
@@ -147,6 +147,14 @@
             storage: 'local',
             storagePwdName: 'tmp_caiyun_pwd'
         },
+        xunlei: {
+            reg: /((?:https?:\/\/)?pan\.xunlei\.com\/s\/[\w-]{10,})/,
+            host: /pan\.xunlei\.com/,
+            input: ['.pass-input-wrap .td-input__inner'],
+            button: ['.pass-input-wrap .td-button'],
+            name: '迅雷云盘',
+            storage: 'hash'
+        }
     };
 
     let main = {
@@ -243,8 +251,8 @@
         //正则解析网盘链接
         parseLink(text) {
             let obj = {name: '', link: ''};
-            let reg = /[\u4e00-\u9fa5()（）,，]/g;
-            text = text.replace(reg, "");
+            text = text.replace(/[\u4e00-\u9fa5\u200B()（）,，]/g, '');
+            text = text.replace(/lanzous.com/g, 'lanzoui.com'); //修正lanzous打不开的问题
             for (let name in opt) {
                 let val = opt[name];
                 if (val.reg.test(text)) {
@@ -259,6 +267,7 @@
 
         //正则解析提取码
         parsePwd(text) {
+            text = text.replace(/\u200B/g,'')
             let reg = /(?<=\s*(密|提取|访问|密|提取|訪問|key|password|pwd)[码碼]?[：:]?\s*)[A-Za-z0-9]{3,8}/i;
             if (reg.test(text)) {
                 let match = text.match(reg);
@@ -285,11 +294,6 @@
             let query = util.parseQuery('pwd');
             let hash = location.hash.slice(1);
             let pwd = query || hash;
-
-            if (!/^[A-Za-z0-9]{3,8}$/.test(pwd)) { //过滤掉不正常的Hash
-                return;
-            }
-
             let panType = this.panDetect();
 
             for (let name in opt) {
@@ -297,14 +301,13 @@
                 if (panType === name) {
                     if (val.storage === 'local') {
                         pwd = util.getValue(val.storagePwdName) ? util.getValue(val.storagePwdName) : '';
-                        if (pwd) {
-                            this._doFillAction(val.input, val.button, pwd);
-                        }
+                        pwd && this._doFillAction(val.input, val.button, pwd);
                     }
                     if (val.storage === 'hash') {
-                        if (pwd) {
-                            this._doFillAction(val.input, val.button, pwd);
+                        if (!/^[A-Za-z0-9]{3,8}$/.test(pwd)) { //过滤掉不正常的Hash
+                            return;
                         }
+                        pwd && this._doFillAction(val.input, val.button, pwd);
                     }
                 }
             }
@@ -324,7 +327,7 @@
                         position: 'top',
                         showCancelButton: false,
                         showConfirmButton: false,
-                        title: '识别到密码！已自动帮您填写',
+                        title: 'AI已识别到密码！正自动帮您填写',
                         icon: 'success',
                         timer: 2000,
                         customClass
@@ -336,9 +339,7 @@
                         button.click();
                     }
                 } else {
-                    if (maxTime === 0) {
-                        clearInterval(ins);
-                    }
+                    maxTime === 0 && clearInterval(ins);
                 }
             }, 800);
         },
@@ -374,12 +375,10 @@
                     icon: 'info',
                     showCloseButton: true,
                     confirmButtonText: '保存',
-                    footer: '<div style="text-align: center;font-size: 1em;">点击查看 <a href="https://www.baiduyun.wiki/tool/install-panai.html" target="_blank">使用说明</a>，助手免费开源，<a href="https://www.baiduyun.wiki/panai.user.js">检查更新</a><svg viewBox="0 0 1024 1024" xmlns="http://www.w3.org/2000/svg" width="14" height="14"><path d="M445.956 138.812L240.916 493.9c-11.329 19.528-12.066 44.214 0 65.123 12.067 20.909 33.898 32.607 56.465 32.607h89.716v275.044c0 31.963 25.976 57.938 57.938 57.938h134.022c32.055 0 57.938-25.975 57.938-57.938V591.63h83.453c24.685 0 48.634-12.803 61.806-35.739 13.172-22.844 12.343-50.016 0-71.386l-199.42-345.693c-13.633-23.58-39.24-39.516-68.44-39.516-29.198 0-54.897 15.935-68.438 39.516z" fill="#d81e06"/></svg></div>',
+                    footer: '<div style="text-align: center;font-size: 1em;">点击查看 <a href="https://www.baiduyun.wiki/tool/install-panai.html" target="_blank">使用说明</a>，助手免费开源，<a href="https://www.baiduyun.wiki/tool/install-panai.html">检查更新</a><svg viewBox="0 0 1024 1024" xmlns="http://www.w3.org/2000/svg" width="14" height="14"><path d="M445.956 138.812L240.916 493.9c-11.329 19.528-12.066 44.214 0 65.123 12.067 20.909 33.898 32.607 56.465 32.607h89.716v275.044c0 31.963 25.976 57.938 57.938 57.938h134.022c32.055 0 57.938-25.975 57.938-57.938V591.63h83.453c24.685 0 48.634-12.803 61.806-35.739 13.172-22.844 12.343-50.016 0-71.386l-199.42-345.693c-13.633-23.58-39.24-39.516-68.44-39.516-29.198 0-54.897 15.935-68.438 39.516z" fill="#d81e06"/></svg></div>',
                     customClass
                 }).then((res) => {
-                    if (res.isConfirmed) {
-                        history.go(0);
-                    }
+                    res.isConfirmed && history.go(0);
                 });
 
                 document.getElementById('S-Auto').addEventListener('change', (e) => {

@@ -1,7 +1,7 @@
- // ==UserScript==
+// ==UserScript==
 // @name              网盘智能识别助手
 // @namespace         https://github.com/syhyz1990/panAI
-// @version           1.3.2
+// @version           1.4.0
 // @author            YouXiaoHou
 // @icon              https://www.baiduyun.wiki/panai.png
 // @icon64            https://www.baiduyun.wiki/panai.png
@@ -97,10 +97,10 @@
         },
 
         isHidden(el) {
-            try{
+            try {
                 return el.offsetParent === null;
             } catch (e) {
-                return false
+                return false;
             }
         }
     };
@@ -112,6 +112,14 @@
             input: ['#accessCode'],
             button: ['#submitBtn'],
             name: '百度网盘',
+            storage: 'hash'
+        },
+        aliyun: {
+            reg: /((?:https?:\/\/)?(?:www)\.aliyundrive\.com\/s\/[A-Za-z0-9]+)/,
+            host: /www\.aliyundrive\.com/,
+            input: ['.ant-input', 'input[type="text"]'],
+            button: ['.button--fep7l', 'button[type="submit"]'],
+            name: '阿里云盘',
             storage: 'hash'
         },
         weiyun: {
@@ -267,7 +275,7 @@
 
         //正则解析提取码
         parsePwd(text) {
-            text = text.replace(/\u200B/g,'')
+            text = text.replace(/\u200B/g, '');
             let reg = /(?<=\s*(密|提取|访问|密|提取|訪問|key|password|pwd)[码碼]?[：:]?\s*)[A-Za-z0-9]{3,8}/i;
             if (reg.test(text)) {
                 let match = text.match(reg);
@@ -332,10 +340,19 @@
                         timer: 2000,
                         customClass
                     });
+
+                    let lastValue = input.value;
                     input.value = pwd;
-                    input.dispatchEvent(new Event('input'));
+                    //Vue & React 触发 input 事件
+                    let event = new Event('input', {bubbles: true});
+                    let tracker = input._valueTracker;
+                    if (tracker) {
+                        tracker.setValue(lastValue);
+                    }
+                    input.dispatchEvent(event);
+
                     if (util.getValue('setting_auto_click_btn')) {
-                        await util.sleep(1000) //1秒后点击按钮
+                        await util.sleep(1000); //1秒后点击按钮
                         button.click();
                     }
                 } else {
@@ -409,7 +426,7 @@
         },
 
         isTopWindow() {
-            return window.self === window.top
+            return window.self === window.top;
         },
 
         init() {

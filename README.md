@@ -15,7 +15,7 @@
 
 👉 【网盘智能识别助手】可以智能识别网页中选中文字（一般背景为蓝色）里的 网盘链接 和 提取码/密码，提示并自动填写提取码。
 
-支持识别百度网盘，腾讯微云，蓝奏云，天翼云，和彩云的链接和提取码/密码。
+支持识别**百度网盘，阿里云盘，腾讯微云，蓝奏云，天翼云，和彩云，迅雷云盘**。（安装成功后可以使用页尾的链接进行测试）识别速度不到1毫秒。
 
 ## 🎨 助手界面
 
@@ -35,9 +35,27 @@
 
 ## 📖 更新日志
 
+- **v1.4.0** 添加对阿里云盘链接的识别支持，见测试链接 - 阿里云盘。
+
+- **v1.3.2** 支持识别更多天翼云链接格式。
+
+- **v1.3.1** 支持识别到 lanzous.com，就自动转换到可以访问的域名 lanzoui.com
+
+- **v1.3.0** 添加了对迅雷网盘的识别支持，改进了对链接中含有零宽度字符时无法识别的问题，修复和彩云无法自动填写的 Bug。
+
+- **v1.2.0** 修复了设置选项出现在 iframe 里的情况，优化了自动点击提交按钮的逻辑。
+
+- **v1.1.1** 修正了在部分网站上样式无法加载的问题。
+
+- **v1.1.0** 修正了弹出框在百度搜索上样式错乱的问题，部分网站弹出框被覆盖的问题，支持 iframe 网页内识别。
+
+- **v1.0.6** 支持对 `http删s://pan.b厨aidu.co次m/s/xxxx闷xxx` 这种中间含有汉字等特殊符号的识别。
+
+- **v1.0.5** 支持连续识别，增强对百度网盘的链接识别。
+
 - **v1.0.3** 增强识别准确度，对提取码判断更加准确。
 
-- **v1.0.2** 增加对不带https的链接识别，修复部分网站设置弹出框字体过大的提示。
+- **v1.0.2** 增加对不带 https 的链接识别，修复部分网站设置弹出框字体过大的提示。
 
 - **v1.0.1** 增加对和彩云的识别支持。
 
@@ -91,23 +109,31 @@ A：根据作者多次测试，平均识别时间：1毫秒-3毫秒，基本上�
 
 - **百度网盘**
 
-![](https://i.loli.net/2021/03/05/7NPZIk8buGmhF6S.gif)
+![](https://cdn.jsdelivr.net/gh/youxiaohou/img/7NPZIk8buGmhF6S.gif)
+
+- **阿里云盘**
+
+![](https://cdn.jsdelivr.net/gh/youxiaohou/img/20210730104103.gif)
 
 - **蓝奏云**
 
-![](https://i.loli.net/2021/03/05/J4dTB5kwQnDab6R.gif)
+![](https://cdn.jsdelivr.net/gh/youxiaohou/img/J4dTB5kwQnDab6R.gif)
 
 - **腾讯微云**
 
-![](https://i.loli.net/2021/03/05/pOj4exrZcKhWiM1.gif)
+![](https://cdn.jsdelivr.net/gh/youxiaohou/img/pOj4exrZcKhWiM1.gif)
 
 - **天翼云**
 
-![](https://i.loli.net/2021/03/05/T7oku1FDbW6Kjye.gif)
+![](https://cdn.jsdelivr.net/gh/youxiaohou/img/T7oku1FDbW6Kjye.gif)
 
 - **和彩云**
 
-![](https://i.loli.net/2021/03/05/9k8GUqbDEOKxPor.gif)
+![](https://cdn.jsdelivr.net/gh/youxiaohou/img/9k8GUqbDEOKxPor.gif)
+
+- **迅雷网盘**
+
+![](https://cdn.jsdelivr.net/gh/youxiaohou/img/20210730104416.gif)
 
 ## 👻 BUG反馈
 

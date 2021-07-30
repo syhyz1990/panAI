@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name              网盘智能识别助手
 // @namespace         https://github.com/syhyz1990/panAI
-// @version           1.4.0
+// @version           1.4.1
 // @author            YouXiaoHou
 // @icon              https://www.baiduyun.wiki/panai.png
 // @icon64            https://www.baiduyun.wiki/panai.png
@@ -115,8 +115,8 @@
             storage: 'hash'
         },
         aliyun: {
-            reg: /((?:https?:\/\/)?(?:www)\.aliyundrive\.com\/s\/[A-Za-z0-9]+)/,
-            host: /www\.aliyundrive\.com/,
+            reg: /((?:https?:\/\/)?(?:www\.aliyundrive\.com\/s|alywp\.net)\/[A-Za-z0-9]+)/,
+            host: /www\.aliyundrive\.com|alywp\.net/,
             input: ['.ant-input', 'input[type="text"]'],
             button: ['.button--fep7l', 'button[type="submit"]'],
             name: '阿里云盘',
@@ -131,7 +131,7 @@
             storage: 'hash'
         },
         lanzou: {
-            reg: /((?:https?:\/\/)?(?:[A-Za-z0-9\-]+)\.lanzou[six]\.com\/[A-Za-z0-9]+)/,
+            reg: /((?:https?:\/\/)?(?:[A-Za-z0-9\-]+)\.lanzou[six]\.com\/[A-Za-z0-9_\-]+)/,
             host: /(?:[A-Za-z0-9]+)\.lanzou[six]\.com/,
             input: ['#pwd'],
             button: ['.passwddiv-btn', '#sub'],

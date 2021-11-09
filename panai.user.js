@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name              网盘智能识别助手
 // @namespace         https://github.com/syhyz1990/panAI
-// @version           1.4.1
+// @version           1.4.3
 // @author            YouXiaoHou
 // @icon              https://www.baiduyun.wiki/panai.png
 // @icon64            https://www.baiduyun.wiki/panai.png
@@ -131,8 +131,8 @@
             storage: 'hash'
         },
         lanzou: {
-            reg: /((?:https?:\/\/)?(?:[A-Za-z0-9\-]+)\.lanzou[six]\.com\/[A-Za-z0-9_\-]+)/,
-            host: /(?:[A-Za-z0-9]+)\.lanzou[six]\.com/,
+            reg: /((?:https?:\/\/)?(?:[A-Za-z0-9\-.]+)?lanzou[a-z]\.com\/[A-Za-z0-9_\-]+)/,
+            host: /(?:[A-Za-z0-9.]+)?lanzou[a-z]\.com/,
             input: ['#pwd'],
             button: ['.passwddiv-btn', '#sub'],
             name: '蓝奏云',
@@ -260,7 +260,7 @@
         parseLink(text) {
             let obj = {name: '', link: ''};
             text = text.replace(/[\u4e00-\u9fa5\u200B()（）,，]/g, '');
-            text = text.replace(/lanzous.com/g, 'lanzoui.com'); //修正lanzous打不开的问题
+            text = text.replace(/lanzous/g, 'lanzoui'); //修正lanzous打不开的问题
             for (let name in opt) {
                 let val = opt[name];
                 if (val.reg.test(text)) {

@@ -1,11 +1,11 @@
 // ==UserScript==
 // @name              网盘智能识别助手
 // @namespace         https://github.com/syhyz1990/panAI
-// @version           1.4.3
+// @version           1.5.0
 // @author            YouXiaoHou
 // @icon              https://www.baiduyun.wiki/panai.png
 // @icon64            https://www.baiduyun.wiki/panai.png
-// @description       AI智能识别选中文字中的【网盘链接】和【提取码】，识别成功打开网盘链接并自动填写提取码，省去手动复制提取码在输入的烦恼。支持百度网盘，腾讯微云，蓝奏云，天翼云，和彩云，迅雷云盘。
+// @description       AI智能识别选中文字中的【网盘链接】和【提取码】，识别成功打开网盘链接并自动填写提取码，省去手动复制提取码在输入的烦恼。支持百度网盘，腾讯微云，蓝奏云，天翼云，和彩云，迅雷云盘，123云盘。
 // @license           AGPL
 // @homepage          https://www.baiduyun.wiki/tool/install-panai.html
 // @supportURL        https://github.com/syhyz1990/panAI
@@ -162,7 +162,15 @@
             button: ['.pass-input-wrap .td-button'],
             name: '迅雷云盘',
             storage: 'hash'
-        }
+        },
+        '123pan': {
+            reg: /((?:https?:\/\/)?www\.123pan\.com\/s\/[\w-]{6,})/,
+            host: /www\.123pan\.com/,
+            input: ['.ca-fot input'],
+            button: ['.ca-fot button'],
+            name: '123云盘',
+            storage: 'hash'
+        },
     };
 
     let main = {
@@ -210,7 +218,11 @@
                 let link = linkObj.link;
                 let name = linkObj.name;
                 let pwd = this.parsePwd(text);
-
+                if (!link) {
+                    linkObj = this.parseParentLink(selection);
+                    link = linkObj.link;
+                    name = linkObj.name;
+                }
                 if (link) {
                     if (!/https?:\/\//.test(link)) {
                         link = 'https://' + link;
@@ -257,26 +269,37 @@
         },
 
         //正则解析网盘链接
-        parseLink(text) {
+        parseLink(text = '') {
             let obj = {name: '', link: ''};
-            text = text.replace(/[\u4e00-\u9fa5\u200B()（）,，]/g, '');
-            text = text.replace(/lanzous/g, 'lanzoui'); //修正lanzous打不开的问题
-            for (let name in opt) {
-                let val = opt[name];
-                if (val.reg.test(text)) {
-                    let matches = text.match(val.reg);
-                    obj.name = val.name;
-                    obj.link = matches[0];
-                    return obj;
+            if (text) {
+                text = text.replace(/[\u4e00-\u9fa5\u200B()（）,，]/g, '');
+                text = text.replace(/lanzous/g, 'lanzoui'); //修正lanzous打不开的问题
+                for (let name in opt) {
+                    let val = opt[name];
+                    if (val.reg.test(text)) {
+                        let matches = text.match(val.reg);
+                        obj.name = val.name;
+                        obj.link = matches[0];
+                        return obj;
+                    }
                 }
             }
             return obj;
         },
 
+        //正则解析超链接类型网盘链接
+        parseParentLink(selection) {
+            let anchorNode = selection.anchorNode.parentElement.href;
+            let focusNode = selection.focusNode.parentElement.href;
+            if (anchorNode) return this.parseLink(anchorNode);
+            if (focusNode) return this.parseLink(focusNode);
+            return this.parseLink()
+        },
+
         //正则解析提取码
         parsePwd(text) {
             text = text.replace(/\u200B/g, '');
-            let reg = /(?<=\s*(密|提取|访问|密|提取|訪問|key|password|pwd)[码碼]?[：:]?\s*)[A-Za-z0-9]{3,8}/i;
+            let reg = /(?<=\s*(密|提取|访问|訪問|key|password|pwd)[码碼]?[：:]?\s*)[A-Za-z0-9]{3,8}/i;
             if (reg.test(text)) {
                 let match = text.match(reg);
                 return match[0];
@@ -309,19 +332,19 @@
                 if (panType === name) {
                     if (val.storage === 'local') {
                         pwd = util.getValue(val.storagePwdName) ? util.getValue(val.storagePwdName) : '';
-                        pwd && this._doFillAction(val.input, val.button, pwd);
+                        pwd && this.doFillAction(val.input, val.button, pwd);
                     }
                     if (val.storage === 'hash') {
                         if (!/^[A-Za-z0-9]{3,8}$/.test(pwd)) { //过滤掉不正常的Hash
                             return;
                         }
-                        pwd && this._doFillAction(val.input, val.button, pwd);
+                        pwd && this.doFillAction(val.input, val.button, pwd);
                     }
                 }
             }
         },
 
-        _doFillAction(inputSelector, buttonSelector, pwd) {
+        doFillAction(inputSelector, buttonSelector, pwd) {
             let maxTime = 10;
             let ins = setInterval(async () => {
                 maxTime--;

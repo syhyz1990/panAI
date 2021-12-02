@@ -30,20 +30,6 @@
 
 - **[安装地址（GreasyFork）](https://greasyfork.org/zh-CN/scripts/422960)**
 
-## 🎨 GIF演示
-
-图中网盘链接均来自Google搜索引擎，点击查看对应网盘识别动图：
-
-| **百度网盘** | **阿里云盘** |
-|:-------------------------------------------------:|:-----------------------------------------------:|
-| ![](https://cdn.jsdelivr.net/gh/youxiaohou/img/7NPZIk8buGmhF6S.gif) | ![](https://cdn.jsdelivr.net/gh/youxiaohou/img/20210730104103.gif) |
-| **蓝奏云** | **腾讯微云** |
-| ![](https://cdn.jsdelivr.net/gh/youxiaohou/img/J4dTB5kwQnDab6R.gif) | ![](https://cdn.jsdelivr.net/gh/youxiaohou/img/pOj4exrZcKhWiM1.gif) |
-| **天翼云** | **和彩云** |
-| ![](https://cdn.jsdelivr.net/gh/youxiaohou/img/T7oku1FDbW6Kjye.gif) | ![](https://cdn.jsdelivr.net/gh/youxiaohou/img/9k8GUqbDEOKxPor.gif) |
-| **迅雷网盘** | **123云盘** |
-| ![](https://cdn.jsdelivr.net/gh/youxiaohou/img/20210730104416.gif) | ![](https://cdn.jsdelivr.net/gh/youxiaohou/img/202112011344554.gif) |
-
 ## 📖 使用说明
 
 1. 鼠标选中含网盘链接的文字，被选中区域背景会变成蓝色（容错性很高，选多或选少了也可以智能识别😀）
@@ -87,6 +73,20 @@
 - **v1.0.1** 增加对和彩云的识别支持。
 
 - **v1.0.0** 增加对百度网盘，腾讯微云，蓝奏云，天翼云的识别支持。
+
+## 🎨 GIF演示
+
+图中网盘链接均来自Google搜索引擎，点击查看对应网盘识别动图：
+
+| **百度网盘** | **阿里云盘** |
+|:-------------------------------------------------:|:-----------------------------------------------:|
+| ![](https://cdn.jsdelivr.net/gh/youxiaohou/img/7NPZIk8buGmhF6S.gif) | ![](https://cdn.jsdelivr.net/gh/youxiaohou/img/20210730104103.gif) |
+| **蓝奏云** | **腾讯微云** |
+| ![](https://cdn.jsdelivr.net/gh/youxiaohou/img/J4dTB5kwQnDab6R.gif) | ![](https://cdn.jsdelivr.net/gh/youxiaohou/img/pOj4exrZcKhWiM1.gif) |
+| **天翼云** | **和彩云** |
+| ![](https://cdn.jsdelivr.net/gh/youxiaohou/img/T7oku1FDbW6Kjye.gif) | ![](https://cdn.jsdelivr.net/gh/youxiaohou/img/9k8GUqbDEOKxPor.gif) |
+| **迅雷网盘** | **123云盘** |
+| ![](https://cdn.jsdelivr.net/gh/youxiaohou/img/20210730104416.gif) | ![](https://cdn.jsdelivr.net/gh/youxiaohou/img/202112011344554.gif) |
 
 ## 🔧 助手配置
 

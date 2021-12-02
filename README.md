@@ -1,16 +1,19 @@
 <p align="center">
   <a href="https://www.baiduyun.wiki">
-    <img width="160" src="https://www.baiduyun.wiki/logo.png" alt="网盘智能识别助手">
+    <img width="100" src="https://www.baiduyun.wiki/logo.png" alt="网盘智能识别助手">
   </a>
 </p>
 
 <h1 align="center">网盘智能识别助手</h1>
 
 <p align="center">
-  <img src="https://img.shields.io/badge/tamperMonkey-v4.8-brightgreen.svg" alt="tampermonkey">
-  <img src="https://img.shields.io/badge/chrome%20x64-v76.0-brightgreen.svg" alt="chrome">
-  <img src="https://img.shields.io/badge/safari%20-v12.0-brightgreen.svg" alt="safari">
-  <img src="https://img.shields.io/badge/platform-Windows%20%7C%20Mac%20%7C%20Android-blue.svg" alt="platform">
+  <img src="https://img.shields.io/badge/TamperMonkey-v4.13-brightgreen.svg" alt="tampermonkey">
+  <a href="LICENSE">
+    <img src="https://img.shields.io/badge/license-MIT-lightgrey.svg" alt="LICENSE">
+  </a>
+  <img src="https://img.shields.io/badge/Chrome-≥76.0-brightgreen.svg" alt="chrome">
+  <img src="https://img.shields.io/badge/Edge-≥88.0-brightgreen.svg" alt="chrome">
+  <img src="https://img.shields.io/badge/Platform-Windows%20%7C%20Mac%20%7C%20Linux-blue.svg" alt="platform">
 </p>
 
 👉 【网盘智能识别助手】可以智能识别网页中选中文字（一般背景为蓝色）里的 网盘链接 和 提取码/密码，提示并自动填写提取码。
@@ -23,7 +26,23 @@
 
 ## 💽 安装地址
 
-[点击安装识别助手](https://www.baiduyun.wiki/tool/install-panai.html)
+- **[安装地址（官方）](https://www.baiduyun.wiki/tool/install-panai.html)**
+
+- **[安装地址（GreasyFork）](https://greasyfork.org/zh-CN/scripts/422960)**
+
+## 🎨 GIF演示
+
+图中网盘链接均来自Google搜索引擎，点击查看对应网盘识别动图：
+
+| **百度网盘** | **阿里云盘** |
+|:-------------------------------------------------:|:-----------------------------------------------:|
+| ![](https://cdn.jsdelivr.net/gh/youxiaohou/img/7NPZIk8buGmhF6S.gif) | ![](https://cdn.jsdelivr.net/gh/youxiaohou/img/20210730104103.gif) |
+| **蓝奏云** | **腾讯微云** |
+| ![](https://cdn.jsdelivr.net/gh/youxiaohou/img/J4dTB5kwQnDab6R.gif) | ![](https://cdn.jsdelivr.net/gh/youxiaohou/img/pOj4exrZcKhWiM1.gif) |
+| **天翼云** | **和彩云** |
+| ![](https://cdn.jsdelivr.net/gh/youxiaohou/img/T7oku1FDbW6Kjye.gif) | ![](https://cdn.jsdelivr.net/gh/youxiaohou/img/9k8GUqbDEOKxPor.gif) |
+| **迅雷网盘** | **123云盘** |
+| ![](https://cdn.jsdelivr.net/gh/youxiaohou/img/20210730104416.gif) | ![](https://cdn.jsdelivr.net/gh/youxiaohou/img/202112011344554.gif) |
 
 ## 📖 使用说明
 
@@ -34,6 +53,12 @@
 ![](https://i.loli.net/2021/03/05/oqMDRTiIcBlYudv.png)
 
 ## 📖 更新日志
+
+- **v1.5.0** 增加对123云盘的识别，支持超链接形式的识别（选中密码和我试试看 (opens new window)密码:d8f9）。
+
+- **v1.4.3** 增强对蓝奏云新链接的识别。
+
+- **v1.4.2** 增强对蓝奏云链接的识别。
 
 - **v1.4.1** 添加对阿里云盘短链接 alywp.net 的识别，增强对蓝奏云自定义链接的识别。
 
@@ -104,38 +129,6 @@ A：助手免费开源，代码均在本地运行，不会保留任何您的网�
 Q5：智能识别过程会耗费资源吗？
 
 A：根据作者多次测试，平均识别时间：1毫秒-3毫秒，基本上不占用系统资源。
-
-## 🎨 GIF演示
-
-图中网盘链接均来自Google搜索引擎，点击查看对应网盘识别动图：
-
-- **百度网盘**
-
-![](https://cdn.jsdelivr.net/gh/youxiaohou/img/7NPZIk8buGmhF6S.gif)
-
-- **阿里云盘**
-
-![](https://cdn.jsdelivr.net/gh/youxiaohou/img/20210730104103.gif)
-
-- **蓝奏云**
-
-![](https://cdn.jsdelivr.net/gh/youxiaohou/img/J4dTB5kwQnDab6R.gif)
-
-- **腾讯微云**
-
-![](https://cdn.jsdelivr.net/gh/youxiaohou/img/pOj4exrZcKhWiM1.gif)
-
-- **天翼云**
-
-![](https://cdn.jsdelivr.net/gh/youxiaohou/img/T7oku1FDbW6Kjye.gif)
-
-- **和彩云**
-
-![](https://cdn.jsdelivr.net/gh/youxiaohou/img/9k8GUqbDEOKxPor.gif)
-
-- **迅雷网盘**
-
-![](https://cdn.jsdelivr.net/gh/youxiaohou/img/20210730104416.gif)
 
 ## 👻 BUG反馈
 

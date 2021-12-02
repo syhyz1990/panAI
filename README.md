@@ -12,8 +12,9 @@
     <img src="https://img.shields.io/badge/license-MIT-lightgrey.svg" alt="LICENSE">
   </a>
   <img src="https://img.shields.io/badge/Chrome-≥76.0-brightgreen.svg" alt="chrome">
-  <img src="https://img.shields.io/badge/Edge-≥88.0-brightgreen.svg" alt="chrome">
+  <img src="https://img.shields.io/badge/Edge-≥88.0-brightgreen.svg" alt="edge">
   <img src="https://img.shields.io/badge/Platform-Windows%20%7C%20Mac%20%7C%20Linux-blue.svg" alt="platform">
+  <img src="https://img.shields.io/badge/Author-油小猴-red.svg">
 </p>
 
 <div align="center">

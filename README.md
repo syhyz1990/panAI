@@ -16,7 +16,13 @@
   <img src="https://img.shields.io/badge/Platform-Windows%20%7C%20Mac%20%7C%20Linux-blue.svg" alt="platform">
 </p>
 
-👉 【网盘智能识别助手】可以智能识别网页中选中文字（一般背景为蓝色）里的 网盘链接 和 提取码/密码，提示并自动填写提取码。
+<div align="center">
+  <strong>👉 自动识别网盘分享链接并填写提取码 👈</strong><br>
+  <sub>适用于 Linux，macOS，Windows 平台</sub>
+</div>
+<br>
+
+【网盘智能识别助手】可以智能识别网页中选中文字（一般背景为蓝色）里的 网盘链接 和 提取码/密码，提示并自动填写提取码。
 
 支持识别**百度网盘，阿里云盘，腾讯微云，蓝奏云，天翼云，和彩云，迅雷云盘**。（安装成功后可以使用页尾的链接进行测试）识别速度不到1毫秒。
 

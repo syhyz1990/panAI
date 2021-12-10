@@ -1,6 +1,6 @@
 <p align="center">
-  <a href="https://www.baiduyun.wiki">
-    <img width="100" src="https://www.baiduyun.wiki/logo.png" alt="网盘智能识别助手">
+  <a href="https://www.youxiaohou.com">
+    <img width="100" src="https://www.youxiaohou.com/logo.png" alt="网盘智能识别助手">
   </a>
 </p>
 
@@ -14,7 +14,7 @@
   <img src="https://img.shields.io/badge/Chrome-≥76.0-brightgreen.svg" alt="chrome">
   <img src="https://img.shields.io/badge/Edge-≥88.0-brightgreen.svg" alt="edge">
   <img src="https://img.shields.io/badge/Platform-Windows%20%7C%20Mac%20%7C%20Linux-blue.svg" alt="platform">
-  <a href="https://www.baiduyun.wiki" title="点击访问">
+  <a href="https://www.youxiaohou.com" title="点击访问">
     <img src="https://img.shields.io/badge/Author-油小猴-red.svg">
   </a>
 </p>
@@ -35,7 +35,7 @@
 
 ## 💽 安装地址
 
-- **[安装地址（官方）](https://www.baiduyun.wiki/tool/install-panai.html)**
+- **[安装地址（官方）](https://www.youxiaohou.com/tool/install-panai.html)**
 
 - **[安装地址（GreasyFork）](https://greasyfork.org/zh-CN/scripts/422960)**
 
@@ -115,7 +115,7 @@
 
 安装好识别助手后，可以在打开页面中**选中**下方任意链接进行测试，以下仅是部分。**识别成功率高达99%！**
 
-[点击查看](https://www.baiduyun.wiki/tool/install-panai.html)
+[点击查看](https://www.youxiaohou.com/tool/install-panai.html)
 
 ## 👻 常见问题
 

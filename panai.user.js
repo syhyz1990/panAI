@@ -1,19 +1,19 @@
 // ==UserScript==
 // @name              网盘智能识别助手
 // @namespace         https://github.com/syhyz1990/panAI
-// @version           1.5.0
+// @version           1.5.2
 // @author            YouXiaoHou
-// @icon              https://www.baiduyun.wiki/panai.png
-// @icon64            https://www.baiduyun.wiki/panai.png
+// @icon              https://www.youxiaohou.com/panai.png
+// @icon64            https://www.youxiaohou.com/panai.png
 // @description       AI智能识别选中文字中的【网盘链接】和【提取码】，识别成功打开网盘链接并自动填写提取码，省去手动复制提取码在输入的烦恼。支持百度网盘，腾讯微云，蓝奏云，天翼云，和彩云，迅雷云盘，123云盘。
 // @license           AGPL
-// @homepage          https://www.baiduyun.wiki/tool/install-panai.html
+// @homepage          https://www.youxiaohou.com/tool/install-panai.html
 // @supportURL        https://github.com/syhyz1990/panAI
-// @updateURL         https://www.baiduyun.wiki/panai.user.js
-// @downloadURL       https://www.baiduyun.wiki/panai.user.js
+// @updateURL         https://www.youxiaohou.com/panai.user.js
+// @downloadURL       https://www.youxiaohou.com/panai.user.js
 // @match             *://*/*
-// @require           https://cdn.jsdelivr.net/npm/sweetalert2@10.15.6/dist/sweetalert2.min.js
-// @resource          swalStyle https://cdn.jsdelivr.net/npm/sweetalert2@10.15.6/dist/sweetalert2.min.css
+// @require           https://unpkg.com/sweetalert2@10.15.6/dist/sweetalert2.min.js
+// @resource          swalStyle https://unpkg.com/sweetalert2@10.15.6/dist/sweetalert2.min.css
 // @run-at            document-end
 // @grant             GM_openInTab
 // @grant             unsafeWindow
@@ -273,7 +273,7 @@
             let obj = {name: '', link: ''};
             if (text) {
                 text = text.replace(/[\u4e00-\u9fa5\u200B()（）,，]/g, '');
-                text = text.replace(/lanzous/g, 'lanzoui'); //修正lanzous打不开的问题
+                text = text.replace(/lanzous/g, 'lanzouw'); //修正lanzous打不开的问题
                 for (let name in opt) {
                     let val = opt[name];
                     if (val.reg.test(text)) {
@@ -415,7 +415,7 @@
                     icon: 'info',
                     showCloseButton: true,
                     confirmButtonText: '保存',
-                    footer: '<div style="text-align: center;font-size: 1em;">点击查看 <a href="https://www.baiduyun.wiki/tool/install-panai.html" target="_blank">使用说明</a>，助手免费开源，<a href="https://www.baiduyun.wiki/tool/install-panai.html">检查更新</a><svg viewBox="0 0 1024 1024" xmlns="http://www.w3.org/2000/svg" width="14" height="14"><path d="M445.956 138.812L240.916 493.9c-11.329 19.528-12.066 44.214 0 65.123 12.067 20.909 33.898 32.607 56.465 32.607h89.716v275.044c0 31.963 25.976 57.938 57.938 57.938h134.022c32.055 0 57.938-25.975 57.938-57.938V591.63h83.453c24.685 0 48.634-12.803 61.806-35.739 13.172-22.844 12.343-50.016 0-71.386l-199.42-345.693c-13.633-23.58-39.24-39.516-68.44-39.516-29.198 0-54.897 15.935-68.438 39.516z" fill="#d81e06"/></svg></div>',
+                    footer: '<div style="text-align: center;font-size: 1em;">点击查看 <a href="https://www.youxiaohou.com/tool/install-panai.html" target="_blank">使用说明</a>，助手免费开源，<a href="https://www.youxiaohou.com/tool/install-panai.html">检查更新</a><svg viewBox="0 0 1024 1024" xmlns="http://www.w3.org/2000/svg" width="14" height="14"><path d="M445.956 138.812L240.916 493.9c-11.329 19.528-12.066 44.214 0 65.123 12.067 20.909 33.898 32.607 56.465 32.607h89.716v275.044c0 31.963 25.976 57.938 57.938 57.938h134.022c32.055 0 57.938-25.975 57.938-57.938V591.63h83.453c24.685 0 48.634-12.803 61.806-35.739 13.172-22.844 12.343-50.016 0-71.386l-199.42-345.693c-13.633-23.58-39.24-39.516-68.44-39.516-29.198 0-54.897 15.935-68.438 39.516z" fill="#d81e06"/></svg></div>',
                     customClass
                 }).then((res) => {
                     res.isConfirmed && history.go(0);

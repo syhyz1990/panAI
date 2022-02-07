@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name              网盘智能识别助手
 // @namespace         https://github.com/syhyz1990/panAI
-// @version           1.5.2
+// @version           1.5.6
 // @author            YouXiaoHou
 // @icon              https://www.youxiaohou.com/panai.png
 // @icon64            https://www.youxiaohou.com/panai.png
@@ -12,11 +12,10 @@
 // @updateURL         https://www.youxiaohou.com/panai.user.js
 // @downloadURL       https://www.youxiaohou.com/panai.user.js
 // @match             *://*/*
-// @require           https://unpkg.com/sweetalert2@10.15.6/dist/sweetalert2.min.js
-// @resource          swalStyle https://unpkg.com/sweetalert2@10.15.6/dist/sweetalert2.min.css
-// @run-at            document-end
+// @require           https://unpkg.com/sweetalert2@10.16.6/dist/sweetalert2.min.js
+// @resource          swalStyle https://unpkg.com/sweetalert2@10.16.6/dist/sweetalert2.min.css
+// @run-at            document-idle
 // @grant             GM_openInTab
-// @grant             unsafeWindow
 // @grant             GM_setValue
 // @grant             GM_getValue
 // @grant             GM_registerMenuCommand
@@ -26,26 +25,9 @@
 (function () {
     'use strict';
 
-    const fixedStyle = ['www.baidu.com']; //弹出框错乱的网站css插入到<html>而非<head>
     const customClass = {
         container: 'panai-container',
         popup: 'panai-popup',
-        header: 'panai-header',
-        title: 'panai-title',
-        closeButton: 'panai-close',
-        icon: 'panai-icon',
-        image: 'panai-image',
-        content: 'panai-content',
-        htmlContainer: 'panai-html',
-        input: 'panai-input',
-        inputLabel: 'panai-inputLabel',
-        validationMessage: 'panai-validation',
-        actions: 'panai-actions',
-        confirmButton: 'panai-confirm',
-        denyButton: 'panai-deny',
-        cancelButton: 'panai-cancel',
-        loader: 'panai-loader',
-        footer: 'panai-footer'
     };
 
     let util = {
@@ -70,16 +52,6 @@
             GM_setValue(name, value);
         },
 
-        include(str, arr) {
-            for (let i = 0, l = arr.length; i < l; i++) {
-                let val = arr[i];
-                if (val !== '' && str.toLowerCase().indexOf(val.toLowerCase()) > -1) {
-                    return true;
-                }
-            }
-            return false;
-        },
-
         sleep(time) {
             return new Promise((resolve) => setTimeout(resolve, time));
         },
@@ -92,8 +64,7 @@
             style.rel = 'stylesheet';
             style.id = id;
             tag === 'style' ? style.innerHTML = css : style.href = css;
-            let root = this.include(location.href, fixedStyle);
-            root ? doc.documentElement.appendChild(style) : doc.getElementsByTagName('head')[0].appendChild(style);
+            document.head.appendChild(style);
         },
 
         isHidden(el) {
@@ -115,7 +86,7 @@
             storage: 'hash'
         },
         aliyun: {
-            reg: /((?:https?:\/\/)?(?:www\.aliyundrive\.com\/s|alywp\.net)\/[A-Za-z0-9]+)/,
+            reg: /((?:https?:\/\/)?(?:(?:www\.)?aliyundrive\.com\/s|alywp\.net)\/[A-Za-z0-9]+)/,
             host: /www\.aliyundrive\.com|alywp\.net/,
             input: ['.ant-input', 'input[type="text"]'],
             button: ['.button--fep7l', 'button[type="submit"]'],
@@ -208,7 +179,7 @@
         },
 
         smartIdentify() {
-            let selection = unsafeWindow.getSelection();
+            let selection = window.getSelection();
             let text = selection.toString();
             if (text !== this.lastText && text !== '') { //选择相同文字或空不识别
                 let start = performance.now();
@@ -253,14 +224,15 @@
                             if (name === '和彩云') {  //和彩云无法携带参数和Hash
                                 util.setValue('tmp_caiyun_pwd', pwd);
                             }
+                            let active = util.getValue('setting_active_in_front');
                             if (pwd) {
                                 let extra = `${link}?pwd=${pwd}#${pwd}`;
                                 if (~link.indexOf('?')) {
                                     extra = `${link}&pwd=${pwd}#${pwd}`;
                                 }
-                                GM_openInTab(extra, {active: util.getValue('setting_active_in_front')});
+                                GM_openInTab(extra, {active});
                             } else {
-                                GM_openInTab(`${link}`, {active: util.getValue('setting_active_in_front')});
+                                GM_openInTab(`${link}`, {active});
                             }
                         }
                     });
@@ -272,6 +244,7 @@
         parseLink(text = '') {
             let obj = {name: '', link: ''};
             if (text) {
+                text = text.replace(/[点點]/g, '.');
                 text = text.replace(/[\u4e00-\u9fa5\u200B()（）,，]/g, '');
                 text = text.replace(/lanzous/g, 'lanzouw'); //修正lanzous打不开的问题
                 for (let name in opt) {
@@ -293,13 +266,13 @@
             let focusNode = selection.focusNode.parentElement.href;
             if (anchorNode) return this.parseLink(anchorNode);
             if (focusNode) return this.parseLink(focusNode);
-            return this.parseLink()
+            return this.parseLink();
         },
 
         //正则解析提取码
         parsePwd(text) {
             text = text.replace(/\u200B/g, '');
-            let reg = /(?<=\s*(密|提取|访问|訪問|key|password|pwd)[码碼]?[：:]?\s*)[A-Za-z0-9]{3,8}/i;
+            let reg = /(?<=\s*(密|提取|访问|訪問|key|password|pwd|#)[码碼]?[：:=]?\s*)[A-Za-z0-9]{3,8}/i;
             if (reg.test(text)) {
                 let match = text.match(reg);
                 return match[0];
@@ -385,7 +358,7 @@
         },
 
         registerMenuCommand() {
-            GM_registerMenuCommand('已识别：' + util.getValue('setting_success_times') + '次', () => {
+            GM_registerMenuCommand('👀 已识别：' + util.getValue('setting_success_times') + '次', () => {
                 Swal.fire({
                     showCancelButton: true,
                     title: '确定要重置识别次数吗？',
@@ -401,13 +374,13 @@
                     }
                 });
             });
-            GM_registerMenuCommand('设置', () => {
+            GM_registerMenuCommand('⚙️ 设置', () => {
                 let html = `<div style="font-size: 1em;">
                               <label class="panai-setting-label">填写密码后自动提交<input type="checkbox" id="S-Auto" ${util.getValue('setting_auto_click_btn') ? 'checked' : ''} class="panai-setting-checkbox"></label>
                               <label class="panai-setting-label">前台打开网盘标签页<input type="checkbox" id="S-Active" ${util.getValue('setting_active_in_front') ? 'checked' : ''} 
                               class="panai-setting-checkbox"></label>
                               <label class="panai-setting-label">倒计时结束自动打开<input type="checkbox" id="S-Timer-Open" ${util.getValue('setting_timer_open') ? 'checked' : ''} class="panai-setting-checkbox"></label>
-                              <label class="panai-setting-label"><span>倒计时 <span id="Timer-Value">（${util.getValue('setting_timer') / 1000}秒）</span></span><input type="range" id="S-Timer" min="500" max="10000" step="500" value="${util.getValue('setting_timer')}" style="width: 200px;"></label>
+                              <label class="panai-setting-label" id="Panai-Range-Wrapper" style="${util.getValue('setting_timer_open') ? '' : 'display: none'}"><span>倒计时 <span id="Timer-Value">（${util.getValue('setting_timer') / 1000}秒）</span></span><input type="range" id="S-Timer" min="0" max="10000" step="500" value="${util.getValue('setting_timer')}" style="width: 200px;"></label>
                             </div>`;
                 Swal.fire({
                     title: '识别助手配置',
@@ -422,13 +395,15 @@
                 });
 
                 document.getElementById('S-Auto').addEventListener('change', (e) => {
-                    util.setValue('setting_auto_click_btn', e.currentTarget.checked);
+                    util.setValue('setting_auto_click_btn', e.target.checked);
                 });
                 document.getElementById('S-Active').addEventListener('change', (e) => {
-                    util.setValue('setting_active_in_front', e.currentTarget.checked);
+                    util.setValue('setting_active_in_front', e.target.checked);
                 });
                 document.getElementById('S-Timer-Open').addEventListener('change', (e) => {
-                    util.setValue('setting_timer_open', e.currentTarget.checked);
+                    let rangeWrapper = document.getElementById('Panai-Range-Wrapper');
+                    e.target.checked ? rangeWrapper.style.display = 'flex' : rangeWrapper.style.display = 'none';
+                    util.setValue('setting_timer_open', e.target.checked);
                 });
                 document.getElementById('S-Timer').addEventListener('change', (e) => {
                     util.setValue('setting_timer', e.target.value);
@@ -444,8 +419,17 @@
                 .panai-setting-label { display: flex;align-items: center;justify-content: space-between;padding-top: 20px; }
                 .panai-setting-checkbox { width: 16px;height: 16px; }
             `;
-            util.addStyle('swal-pub-style', 'style', GM_getResourceText('swalStyle'));
-            util.addStyle('panai-style', 'style', style);
+
+            if (document.head) {
+                util.addStyle('swal-pub-style', 'style', GM_getResourceText('swalStyle'));
+                util.addStyle('panai-style', 'style', style);
+            }
+
+            const headObserver = new MutationObserver(() => {
+                util.addStyle('swal-pub-style', 'style', GM_getResourceText('swalStyle'));
+                util.addStyle('panai-style', 'style', style);
+            });
+            headObserver.observe(document.head, {childList: true, subtree: true});
         },
 
         isTopWindow() {

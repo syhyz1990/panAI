@@ -5,7 +5,7 @@
 // @author            YouXiaoHou
 // @icon              https://www.youxiaohou.com/panai.png
 // @icon64            https://www.youxiaohou.com/panai.png
-// @description       AI智能识别选中文字中的【网盘链接】和【提取码】，识别成功打开网盘链接并自动填写提取码，省去手动复制提取码在输入的烦恼。支持百度网盘，腾讯微云，蓝奏云，天翼云，和彩云，迅雷云盘，123云盘。
+// @description       AI智能识别选中文字中的【网盘链接】和【提取码】，识别成功打开网盘链接并自动填写提取码，省去手动复制提取码在输入的烦恼。支持百度网盘，腾讯微云，蓝奏云，天翼云，和彩云，迅雷云盘，123云盘，huang1111云盘。
 // @license           AGPL
 // @homepage          https://www.youxiaohou.com/tool/install-panai.html
 // @supportURL        https://github.com/syhyz1990/panAI
@@ -140,6 +140,14 @@
             input: ['.ca-fot input'],
             button: ['.ca-fot button'],
             name: '123云盘',
+            storage: 'hash'
+        },
+        'huang1111': {
+            reg: /((?:https?:\/\/)?pan\.huang1111\.cn\/s\/[A-Za-z0-9]+)/，
+            host: /pan\.huang1111\.cn/,
+            input: ['#pwd'],
+            button: ['.jss168'],
+            name: 'huang1111网盘',
             storage: 'hash'
         },
     };

@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name              网盘智能识别助手
 // @namespace         https://github.com/syhyz1990/panAI
-// @version           1.5.6
+// @version           1.6.0
 // @author            YouXiaoHou
 // @icon              https://www.youxiaohou.com/panai.png
 // @icon64            https://www.youxiaohou.com/panai.png
@@ -142,6 +142,32 @@
             name: '123云盘',
             storage: 'hash'
         },
+        '360': {
+            reg: /((?:https?:\/\/)?(?:[A-Za-z0-9\-.]+)?yunpan\.360\.cn(\/lk)?\/surl_[\w]{6,})/,
+            host: /yunpan\.360\.cn/,
+            input: ['.pwd-input'],
+            button: ['.submit-btn'],
+            name: '360云盘',
+            storage: 'hash'
+        },
+        chrome: {
+            reg: /((?:https?:\/\/)?chrome.google.com\/webstore\/.+?\/([a-z]{32}))/,
+            host: /chrome\.google\.com/,
+            replaceHost: "chrome.crxsoso.com",
+            name: 'Chrome商店',
+        },
+        edge: {
+            reg: /((?:https?:\/\/)?microsoftedge.microsoft.com\/addons\/.+?\/([a-z]{32}))/,
+            host: /microsoftedge\.microsoft\.com/,
+            replaceHost: "microsoftedge.crxsoso.com",
+            name: 'Edge商店',
+        },
+        firefox: {
+            reg: /((?:https?:\/\/)?addons.mozilla.org\/.*?addon\/([^\/<>"'?#^\s]+))/,
+            host: /addons\.mozilla\.org/,
+            replaceHost: "addons.crxsoso.com",
+            name: 'Firefox商店',
+        },
     };
 
     let main = {
@@ -253,6 +279,9 @@
                         let matches = text.match(val.reg);
                         obj.name = val.name;
                         obj.link = matches[0];
+                        if (val.replaceHost) {
+                            obj.link = obj.link.replace(val.host,val.replaceHost)
+                        }
                         return obj;
                     }
                 }

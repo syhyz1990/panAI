@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name              网盘智能识别助手
 // @namespace         https://github.com/syhyz1990/panAI
-// @version           1.6.0
+// @version           1.7.0
 // @author            YouXiaoHou
 // @icon              https://www.youxiaohou.com/panai.png
 // @icon64            https://www.youxiaohou.com/panai.png
@@ -13,6 +13,7 @@
 // @downloadURL       https://www.youxiaohou.com/panai.user.js
 // @match             *://*/*
 // @require           https://unpkg.com/sweetalert2@10.16.6/dist/sweetalert2.min.js
+// @require           https://unpkg.com/hotkeys-js/dist/hotkeys.min.js
 // @resource          swalStyle https://unpkg.com/sweetalert2@10.16.6/dist/sweetalert2.min.css
 // @run-at            document-idle
 // @grant             GM_openInTab
@@ -29,6 +30,18 @@
         container: 'panai-container',
         popup: 'panai-popup',
     };
+
+    let toast = Swal.mixin({
+        toast: true,
+        position: 'top',
+        showConfirmButton: false,
+        timer: 3500,
+        timerProgressBar: false,
+        didOpen: (toast) => {
+            toast.addEventListener('mouseenter', Swal.stopTimer);
+            toast.addEventListener('mouseleave', Swal.resumeTimer);
+        }
+    });
 
     let util = {
         clog(c) {
@@ -151,19 +164,19 @@
             storage: 'hash'
         },
         chrome: {
-            reg: /((?:https?:\/\/)?chrome.google.com\/webstore\/.+?\/([a-z]{32}))/,
+            reg: /((?:https?:\/\/)?chrome\.google\.com\/webstore\/.+?\/([a-z]{32}))/,
             host: /chrome\.google\.com/,
             replaceHost: "chrome.crxsoso.com",
             name: 'Chrome商店',
         },
         edge: {
-            reg: /((?:https?:\/\/)?microsoftedge.microsoft.com\/addons\/.+?\/([a-z]{32}))/,
+            reg: /((?:https?:\/\/)?microsoftedge\.microsoft\.com\/addons\/.+?\/([a-z]{32}))/,
             host: /microsoftedge\.microsoft\.com/,
             replaceHost: "microsoftedge.crxsoso.com",
             name: 'Edge商店',
         },
         firefox: {
-            reg: /((?:https?:\/\/)?addons.mozilla.org\/.*?addon\/([^\/<>"'?#^\s]+))/,
+            reg: /((?:https?:\/\/)?addons\.mozilla\.org\/.*?addon\/([^\/<>"'?#^\s]+))/,
             host: /addons\.mozilla\.org/,
             replaceHost: "addons.crxsoso.com",
             name: 'Firefox商店',
@@ -204,9 +217,9 @@
             document.addEventListener("mouseup", this.smartIdentify.bind(this), true);
         },
 
-        smartIdentify() {
+        smartIdentify(event, str = '') {
             let selection = window.getSelection();
-            let text = selection.toString();
+            let text = str || selection.toString();
             if (text !== this.lastText && text !== '') { //选择相同文字或空不识别
                 let start = performance.now();
                 this.lastText = text;
@@ -266,6 +279,13 @@
             }
         },
 
+        addHotKey() {
+            hotkeys('f1', (event, handler) => {
+                event.preventDefault();
+                this.showIdentifyBox();
+            });
+        },
+
         //正则解析网盘链接
         parseLink(text = '') {
             let obj = {name: '', link: ''};
@@ -280,7 +300,7 @@
                         obj.name = val.name;
                         obj.link = matches[0];
                         if (val.replaceHost) {
-                            obj.link = obj.link.replace(val.host,val.replaceHost)
+                            obj.link = obj.link.replace(val.host, val.replaceHost);
                         }
                         return obj;
                     }
@@ -386,58 +406,97 @@
             }, 800);
         },
 
-        registerMenuCommand() {
-            GM_registerMenuCommand('👀 已识别：' + util.getValue('setting_success_times') + '次', () => {
-                Swal.fire({
-                    showCancelButton: true,
-                    title: '确定要重置识别次数吗？',
-                    icon: 'warning',
-                    confirmButtonText: '确定',
-                    cancelButtonText: '取消',
-                    customClass
-                }).then((res) => {
-                    this.lastText = 'lorem&';
-                    if (res.isConfirmed) {
-                        util.setValue('setting_success_times', 0);
-                        history.go(0);
-                    }
-                });
+        //重置识别次数
+        clearIdentifyTimes() {
+            let res = Swal.fire({
+                showCancelButton: true,
+                title: '确定要重置识别次数吗？',
+                icon: 'warning',
+                confirmButtonText: '确定',
+                cancelButtonText: '取消',
+                customClass
+            }).then(res => {
+                this.lastText = 'lorem&';
+                if (res.isConfirmed) {
+                    util.setValue('setting_success_times', 0);
+                    history.go(0);
+                }
             });
-            GM_registerMenuCommand('⚙️ 设置', () => {
-                let html = `<div style="font-size: 1em;">
+        },
+
+        //识别输入框中的内容
+        showIdentifyBox() {
+            Swal.fire({
+                title: '识别剪切板中文字',
+                input: 'textarea',
+                inputPlaceholder: '若选方式一，请按 Ctrl+V 粘贴要识别的文字',
+                html: `<div style="font-size: 12px;color: #999;margin-bottom: 8px;text-align: center;">提示：在任意网页按下 <span style="font-weight: 700;">F1</span> 键可快速打开本窗口。</div><div style="font-size: 14px;line-height: 22px;padding: 10px 0 5px;text-align: left;"><div style="font-size: 16px;margin-bottom: 8px;font-weight: 700;">支持以下两种方式：</div><div><b>方式一：</b>直接粘贴文字到输入框，点击“识别方框内容”按钮。</div><div><b>方式二：</b>点击“读取剪切板”按钮。<span style="color: #d14529;font-size: 12px;">会弹出“授予网站读取剪切板”权限，同意后会自动识别剪切板中的文字。</span></div></div>`,
+                showCloseButton: false,
+                showDenyButton: true,
+                confirmButtonText: '识别方框内容',
+                denyButtonText: '读取剪切板',
+                customClass
+            }).then(res => {
+                if (res.isConfirmed) {
+                    this.smartIdentify(null, res.value);
+                }
+                if (res.isDenied) {
+                    navigator.clipboard.readText().then(text => {
+                        this.smartIdentify(null, text);
+                    }).catch(() => {
+                        toast.fire({title: '读取剪切板失败，请先授权或手动粘贴后识别！', icon: 'error'});
+                    });
+                }
+            });
+        },
+
+        //显示设置
+        showSettingBox() {
+            let html = `<div style="font-size: 1em;">
                               <label class="panai-setting-label">填写密码后自动提交<input type="checkbox" id="S-Auto" ${util.getValue('setting_auto_click_btn') ? 'checked' : ''} class="panai-setting-checkbox"></label>
-                              <label class="panai-setting-label">前台打开网盘标签页<input type="checkbox" id="S-Active" ${util.getValue('setting_active_in_front') ? 'checked' : ''} 
+                              <label class="panai-setting-label">前台打开网盘标签页<input type="checkbox" id="S-Active" ${util.getValue('setting_active_in_front') ? 'checked' : ''}
                               class="panai-setting-checkbox"></label>
                               <label class="panai-setting-label">倒计时结束自动打开<input type="checkbox" id="S-Timer-Open" ${util.getValue('setting_timer_open') ? 'checked' : ''} class="panai-setting-checkbox"></label>
                               <label class="panai-setting-label" id="Panai-Range-Wrapper" style="${util.getValue('setting_timer_open') ? '' : 'display: none'}"><span>倒计时 <span id="Timer-Value">（${util.getValue('setting_timer') / 1000}秒）</span></span><input type="range" id="S-Timer" min="0" max="10000" step="500" value="${util.getValue('setting_timer')}" style="width: 200px;"></label>
                             </div>`;
-                Swal.fire({
-                    title: '识别助手配置',
-                    html,
-                    icon: 'info',
-                    showCloseButton: true,
-                    confirmButtonText: '保存',
-                    footer: '<div style="text-align: center;font-size: 1em;">点击查看 <a href="https://www.youxiaohou.com/tool/install-panai.html" target="_blank">使用说明</a>，助手免费开源，<a href="https://www.youxiaohou.com/tool/install-panai.html">检查更新</a><svg viewBox="0 0 1024 1024" xmlns="http://www.w3.org/2000/svg" width="14" height="14"><path d="M445.956 138.812L240.916 493.9c-11.329 19.528-12.066 44.214 0 65.123 12.067 20.909 33.898 32.607 56.465 32.607h89.716v275.044c0 31.963 25.976 57.938 57.938 57.938h134.022c32.055 0 57.938-25.975 57.938-57.938V591.63h83.453c24.685 0 48.634-12.803 61.806-35.739 13.172-22.844 12.343-50.016 0-71.386l-199.42-345.693c-13.633-23.58-39.24-39.516-68.44-39.516-29.198 0-54.897 15.935-68.438 39.516z" fill="#d81e06"/></svg></div>',
-                    customClass
-                }).then((res) => {
-                    res.isConfirmed && history.go(0);
-                });
+            Swal.fire({
+                title: '识别助手配置',
+                html,
+                icon: 'info',
+                showCloseButton: true,
+                confirmButtonText: '保存',
+                footer: '<div style="text-align: center;font-size: 1em;">点击查看 <a href="https://www.youxiaohou.com/tool/install-panai.html" target="_blank">使用说明</a>，助手免费开源，<a href="https://www.youxiaohou.com/tool/install-panai.html">检查更新</a><svg viewBox="0 0 1024 1024" xmlns="http://www.w3.org/2000/svg" width="14" height="14"><path d="M445.956 138.812L240.916 493.9c-11.329 19.528-12.066 44.214 0 65.123 12.067 20.909 33.898 32.607 56.465 32.607h89.716v275.044c0 31.963 25.976 57.938 57.938 57.938h134.022c32.055 0 57.938-25.975 57.938-57.938V591.63h83.453c24.685 0 48.634-12.803 61.806-35.739 13.172-22.844 12.343-50.016 0-71.386l-199.42-345.693c-13.633-23.58-39.24-39.516-68.44-39.516-29.198 0-54.897 15.935-68.438 39.516z" fill="#d81e06"/></svg></div>',
+                customClass
+            }).then((res) => {
+                res.isConfirmed && history.go(0);
+            });
 
-                document.getElementById('S-Auto').addEventListener('change', (e) => {
-                    util.setValue('setting_auto_click_btn', e.target.checked);
-                });
-                document.getElementById('S-Active').addEventListener('change', (e) => {
-                    util.setValue('setting_active_in_front', e.target.checked);
-                });
-                document.getElementById('S-Timer-Open').addEventListener('change', (e) => {
-                    let rangeWrapper = document.getElementById('Panai-Range-Wrapper');
-                    e.target.checked ? rangeWrapper.style.display = 'flex' : rangeWrapper.style.display = 'none';
-                    util.setValue('setting_timer_open', e.target.checked);
-                });
-                document.getElementById('S-Timer').addEventListener('change', (e) => {
-                    util.setValue('setting_timer', e.target.value);
-                    document.getElementById('Timer-Value').innerText = `（${e.target.value / 1000}秒）`;
-                });
+            document.getElementById('S-Auto').addEventListener('change', (e) => {
+                util.setValue('setting_auto_click_btn', e.target.checked);
+            });
+            document.getElementById('S-Active').addEventListener('change', (e) => {
+                util.setValue('setting_active_in_front', e.target.checked);
+            });
+            document.getElementById('S-Timer-Open').addEventListener('change', (e) => {
+                let rangeWrapper = document.getElementById('Panai-Range-Wrapper');
+                e.target.checked ? rangeWrapper.style.display = 'flex' : rangeWrapper.style.display = 'none';
+                util.setValue('setting_timer_open', e.target.checked);
+            });
+            document.getElementById('S-Timer').addEventListener('change', (e) => {
+                util.setValue('setting_timer', e.target.value);
+                document.getElementById('Timer-Value').innerText = `（${e.target.value / 1000}秒）`;
+            });
+        },
+
+        registerMenuCommand() {
+            GM_registerMenuCommand('👀 已识别：' + util.getValue('setting_success_times') + '次', () => {
+                this.clearIdentifyTimes();
+            });
+            GM_registerMenuCommand('📋️ 识别剪切板中文字（快捷键 F1）', () => {
+                this.showIdentifyBox();
+            });
+            GM_registerMenuCommand('⚙️ 设置', () => {
+                this.showSettingBox();
             });
         },
 
@@ -468,6 +527,7 @@
         init() {
             this.initValue();
             this.addPluginStyle();
+            this.addHotKey();
             this.autoFillPassword();
             this.addPageListener();
             this.isTopWindow() && this.registerMenuCommand();

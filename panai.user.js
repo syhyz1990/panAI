@@ -1,11 +1,11 @@
 // ==UserScript==
 // @name              网盘智能识别助手
 // @namespace         https://github.com/syhyz1990/panAI
-// @version           1.7.0
+// @version           1.8.0
 // @author            YouXiaoHou
 // @icon              https://www.youxiaohou.com/panai.png
 // @icon64            https://www.youxiaohou.com/panai.png
-// @description       AI智能识别选中文字中的【网盘链接】和【提取码】，识别成功打开网盘链接并自动填写提取码，省去手动复制提取码在输入的烦恼。支持百度网盘，腾讯微云，蓝奏云，天翼云，和彩云，迅雷云盘，123云盘。
+// @description       智能识别选中文字中的🔗网盘链接和🔑提取码，识别成功打开网盘链接并自动填写提取码，省去手动复制提取码在输入的烦恼。支持识别 ✅百度网盘 ✅阿里云盘 ✅腾讯微云 ✅蓝奏云 ✅天翼云盘 ✅和彩云 ✅迅雷云盘 ✅123云盘 ✅360云盘 ✅115网盘 ✅奶牛快传 ✅城通网盘 ✅夸克网盘 ✅Chrome 扩展商店 ✅Edge 扩展商店 ✅Firefox 扩展商店。
 // @license           AGPL
 // @homepage          https://www.youxiaohou.com/tool/install-panai.html
 // @supportURL        https://github.com/syhyz1990/panAI
@@ -86,52 +86,67 @@
             } catch (e) {
                 return false;
             }
+        },
+
+        query(selector) {
+            if (Array.isArray(selector)) {
+                let obj = null;
+                for (let i = 0; i < selector.length; i++) {
+                    let o = document.querySelector(selector[i]);
+                    if (o) {
+                        obj = o;
+                        break;
+                    }
+                }
+                return obj;
+            }
+            return document.querySelector(selector);
         }
     };
 
     let opt = {
-        baidu: {
-            reg: /((?:https?:\/\/)?(?:yun|pan)\.baidu\.com\/(?:s\/\w*(((-)?\w*)*)?|share\/\S{4,}))/,
-            host: /(pan|yun)\.baidu\.com/,
-            input: ['#accessCode'],
-            button: ['#submitBtn'],
+        'baidu': {
+            reg: /((?:https?:\/\/)?(?:e?yun|pan)\.baidu\.com\/(doc\/|enterprise\/)?(?:s\/[\w~]*(((-)?\w*)*)?|share\/\S{4,}))/,
+            host: /(pan|e?yun)\.baidu\.com/,
+            input: ['#accessCode', '.share-access-code', '#wpdoc-share-page > .u-dialog__wrapper .u-input__inner'],
+            button: ['#submitBtn', '.share-access .g-button', '#wpdoc-share-page > .u-dialog__wrapper .u-btn--primary'],
             name: '百度网盘',
             storage: 'hash'
         },
-        aliyun: {
-            reg: /((?:https?:\/\/)?(?:(?:www\.)?aliyundrive\.com\/s|alywp\.net)\/[A-Za-z0-9]+)/,
+        'aliyun': {
+            reg: /((?:https?:\/\/)?(?:(?:www\.)?aliyundrive\.com\/s|alywp\.net)\/[a-zA-Z0-9]+)/,
             host: /www\.aliyundrive\.com|alywp\.net/,
             input: ['.ant-input', 'input[type="text"]'],
             button: ['.button--fep7l', 'button[type="submit"]'],
             name: '阿里云盘',
             storage: 'hash'
         },
-        weiyun: {
-            reg: /((?:https?:\/\/)?share\.weiyun\.com\/[A-Za-z0-9]+)/,
+        'weiyun': {
+            reg: /((?:https?:\/\/)?share\.weiyun\.com\/[a-zA-Z0-9]+)/,
             host: /share\.weiyun\.com/,
             input: ['.mod-card-s input[type=password]'],
             button: ['.mod-card-s .btn-main'],
             name: '微云',
             storage: 'hash'
         },
-        lanzou: {
-            reg: /((?:https?:\/\/)?(?:[A-Za-z0-9\-.]+)?lanzou[a-z]\.com\/[A-Za-z0-9_\-]+)/,
-            host: /(?:[A-Za-z0-9.]+)?lanzou[a-z]\.com/,
+        'lanzou': {
+            reg: /((?:https?:\/\/)?(?:[a-zA-Z0-9\-.]+)?lanzou[a-z]\.com\/[a-zA-Z0-9_\-]+)/,
+            host: /(?:[a-zA-Z0-9-.]+)?lanzou[a-z]\.com/,
             input: ['#pwd'],
             button: ['.passwddiv-btn', '#sub'],
             name: '蓝奏云',
             storage: 'hash'
         },
-        tianyi: {
-            reg: /((?:https?:\/\/)?cloud\.189\.cn\/(?:t\/|web\/share\?code=)?[A-Za-z0-9]+)/,
+        'tianyi': {
+            reg: /((?:https?:\/\/)?cloud\.189\.cn\/(?:t\/|web\/share\?code=)?[a-zA-Z0-9]+)/,
             host: /cloud\.189\.cn/,
             input: ['.access-code-item #code_txt'],
             button: ['.access-code-item .visit'],
             name: '天翼云',
             storage: 'hash'
         },
-        caiyun: {
-            reg: /((?:https?:\/\/)?caiyun\.139\.com\/m\/i\?[A-Za-z0-9]+)/,
+        'caiyun': {
+            reg: /((?:https?:\/\/)?caiyun\.139\.com\/m\/i\?[a-zA-Z0-9]+)/,
             host: /caiyun\.139\.com/,
             input: ['.token-form input[type=text]'],
             button: ['.token-form .btn-token'],
@@ -139,7 +154,7 @@
             storage: 'local',
             storagePwdName: 'tmp_caiyun_pwd'
         },
-        xunlei: {
+        'xunlei': {
             reg: /((?:https?:\/\/)?pan\.xunlei\.com\/s\/[\w-]{10,})/,
             host: /pan\.xunlei\.com/,
             input: ['.pass-input-wrap .td-input__inner'],
@@ -156,26 +171,59 @@
             storage: 'hash'
         },
         '360': {
-            reg: /((?:https?:\/\/)?(?:[A-Za-z0-9\-.]+)?yunpan\.360\.cn(\/lk)?\/surl_[\w]{6,})/,
+            reg: /((?:https?:\/\/)?(?:[a-zA-Z0-9\-.]+)?yunpan\.360\.cn(\/lk)?\/surl_[\w]{6,})/,
             host: /yunpan\.360\.cn/,
             input: ['.pwd-input'],
             button: ['.submit-btn'],
             name: '360云盘',
             storage: 'hash'
         },
-        chrome: {
+        '115': {
+            reg: /((?:https?:\/\/)?115\.com\/s\/[a-zA-Z0-9]+)/,
+            host: /115\.com/,
+            input: ['.form-decode input'],
+            button: ['.form-decode .submit a'],
+            name: '115网盘',
+            storage: 'hash'
+        },
+        'cowtransfer': {
+            reg: /((?:https?:\/\/)?(?:[a-zA-Z0-9-.]+)?cowtransfer\.com\/s\/[a-zA-Z0-9]+)/,
+            host: /(?:[a-zA-Z0-9-.]+)?cowtransfer\.com/,
+            input: ['.receive-code-input input'],
+            button: ['.open-button'],
+            name: '奶牛快传',
+            storage: 'hash'
+        },
+        'ctfile': {
+            reg: /((?:https?:\/\/)?(?:[a-zA-Z0-9-.]+)?ctfile\.com\/\w+\/[a-zA-Z0-9-]+)/,
+            host: /(?:[a-zA-Z0-9-.]+)?ctfile\.com/,
+            input: ['#passcode'],
+            button: ['.card-body button'],
+            name: '城通网盘',
+            storage: 'hash'
+        },
+        'quark': {
+            reg: /((?:https?:\/\/)?pan\.quark\.cn\/s\/[a-zA-Z0-9-]+)/,
+            host: /pan\.quark\.cn/,
+            input: ['.ant-input'],
+            button: ['.ant-btn-primary'],
+            name: '夸克网盘',
+            storage: 'local',
+            storagePwdName: 'tmp_quark_pwd'
+        },
+        'chrome': {
             reg: /((?:https?:\/\/)?chrome\.google\.com\/webstore\/.+?\/([a-z]{32}))/,
             host: /chrome\.google\.com/,
             replaceHost: "chrome.crxsoso.com",
             name: 'Chrome商店',
         },
-        edge: {
+        'edge': {
             reg: /((?:https?:\/\/)?microsoftedge\.microsoft\.com\/addons\/.+?\/([a-z]{32}))/,
             host: /microsoftedge\.microsoft\.com/,
             replaceHost: "microsoftedge.crxsoso.com",
             name: 'Edge商店',
         },
-        firefox: {
+        'firefox': {
             reg: /((?:https?:\/\/)?addons\.mozilla\.org\/.*?addon\/([^\/<>"'?#^\s]+))/,
             host: /addons\.mozilla\.org/,
             replaceHost: "addons.crxsoso.com",
@@ -263,6 +311,9 @@
                             if (name === '和彩云') {  //和彩云无法携带参数和Hash
                                 util.setValue('tmp_caiyun_pwd', pwd);
                             }
+                            if (name === '夸克网盘') {
+                                util.setValue('tmp_quark_pwd', pwd);
+                            }
                             let active = util.getValue('setting_active_in_front');
                             if (pwd) {
                                 let extra = `${link}?pwd=${pwd}#${pwd}`;
@@ -321,7 +372,7 @@
         //正则解析提取码
         parsePwd(text) {
             text = text.replace(/\u200B/g, '');
-            let reg = /(?<=\s*(密|提取|访问|訪問|key|password|pwd|#)[码碼]?[：:=]?\s*)[A-Za-z0-9]{3,8}/i;
+            let reg = /(?<=\s*(密|提取|访问|訪問|key|password|pwd|#)[码碼]?[：:=]?\s*)[a-zA-Z0-9]{3,8}/i;
             if (reg.test(text)) {
                 let match = text.match(reg);
                 return match[0];
@@ -357,7 +408,7 @@
                         pwd && this.doFillAction(val.input, val.button, pwd);
                     }
                     if (val.storage === 'hash') {
-                        if (!/^[A-Za-z0-9]{3,8}$/.test(pwd)) { //过滤掉不正常的Hash
+                        if (!/^[a-zA-Z0-9]{3,8}$/.test(pwd)) { //过滤掉不正常的Hash
                             return;
                         }
                         pwd && this.doFillAction(val.input, val.button, pwd);
@@ -370,8 +421,8 @@
             let maxTime = 10;
             let ins = setInterval(async () => {
                 maxTime--;
-                let input = document.querySelector(inputSelector[0]) || document.querySelector(inputSelector[1]);
-                let button = document.querySelector(buttonSelector[0]) || document.querySelector(buttonSelector[1]);
+                let input = util.query(inputSelector);
+                let button = util.query(buttonSelector);
 
                 if (input && !util.isHidden(input)) {
                     clearInterval(ins);
@@ -465,7 +516,7 @@
                 icon: 'info',
                 showCloseButton: true,
                 confirmButtonText: '保存',
-                footer: '<div style="text-align: center;font-size: 1em;">点击查看 <a href="https://www.youxiaohou.com/tool/install-panai.html" target="_blank">使用说明</a>，助手免费开源，<a href="https://www.youxiaohou.com/tool/install-panai.html">检查更新</a><svg viewBox="0 0 1024 1024" xmlns="http://www.w3.org/2000/svg" width="14" height="14"><path d="M445.956 138.812L240.916 493.9c-11.329 19.528-12.066 44.214 0 65.123 12.067 20.909 33.898 32.607 56.465 32.607h89.716v275.044c0 31.963 25.976 57.938 57.938 57.938h134.022c32.055 0 57.938-25.975 57.938-57.938V591.63h83.453c24.685 0 48.634-12.803 61.806-35.739 13.172-22.844 12.343-50.016 0-71.386l-199.42-345.693c-13.633-23.58-39.24-39.516-68.44-39.516-29.198 0-54.897 15.935-68.438 39.516z" fill="#d81e06"/></svg></div>',
+                footer: '<div style="text-align: center;font-size: 1em;">点击查看 <a href="https://www.youxiaohou.com/tool/install-panai.html" target="_blank">使用说明</a>，助手免费开源，Powered by <a href="https://www.youxiaohou.com">油小猴</a></div>',
                 customClass
             }).then((res) => {
                 res.isConfirmed && history.go(0);

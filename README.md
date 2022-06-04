@@ -37,9 +37,7 @@
 
 ## 💽 安装地址
 
-- **[安装地址（官方）](https://www.youxiaohou.com/tool/install-panai.html)**
-
-- **[安装地址（GreasyFork）](https://greasyfork.org/zh-CN/scripts/422960)**
+- **[安装地址（推荐）](https://www.youxiaohou.com/tool/install-panai.html)**
 
 ## 📖 使用说明
 

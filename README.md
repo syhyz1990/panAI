@@ -1,7 +1,7 @@
 <center>
 <p align="center">
   <a href="https://www.youxiaohou.com">
-    <img width="100" src="https://www.youxiaohou.com/logo.png" alt="网盘智能识别助手">
+    <img width="100" src="https://www.youxiaohou.com/logo.gif" alt="网盘智能识别助手">
   </a>
 </p>
 

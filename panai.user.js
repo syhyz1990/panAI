@@ -1,12 +1,10 @@
 // ==UserScript==
 // @name              网盘智能识别助手
 // @namespace         https://github.com/syhyz1990/panAI
-// @version           1.8.0
+// @version           1.8.3
 // @author            YouXiaoHou
-// @icon              https://www.youxiaohou.com/panai.png
-// @icon64            https://www.youxiaohou.com/panai.png
-// @description       智能识别选中文字中的🔗网盘链接和🔑提取码，识别成功打开网盘链接并自动填写提取码，省去手动复制提取码在输入的烦恼。支持识别 ✅百度网盘 ✅阿里云盘 ✅腾讯微云 ✅蓝奏云 ✅天翼云盘 ✅和彩云 ✅迅雷云盘 ✅123云盘 ✅360云盘 ✅115网盘 ✅奶牛快传 ✅城通网盘 ✅夸克网盘 ✅Chrome 扩展商店 ✅Edge 扩展商店 ✅Firefox 扩展商店。
-// @license           AGPL
+// @description       智能识别选中文字中的🔗网盘链接和🔑提取码，识别成功打开网盘链接并自动填写提取码，省去手动复制提取码在输入的烦恼。支持识别 ✅百度网盘 ✅阿里云盘 ✅腾讯微云 ✅蓝奏云 ✅天翼云盘 ✅和彩云 ✅迅雷云盘 ✅123云盘 ✅360云盘 ✅115网盘 ✅奶牛快传 ✅城通网盘 ✅夸克网盘 ✅FlowUs息流 ✅Chrome 扩展商店 ✅Edge 扩展商店 ✅Firefox 扩展商店 ✅Windows 应用商店。
+// @license           AGPL-3.0-or-later
 // @homepage          https://www.youxiaohou.com/tool/install-panai.html
 // @supportURL        https://github.com/syhyz1990/panAI
 // @updateURL         https://www.youxiaohou.com/panai.user.js
@@ -21,6 +19,7 @@
 // @grant             GM_getValue
 // @grant             GM_registerMenuCommand
 // @grant             GM_getResourceText
+// @icon              data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAxMjggMTI4Ij48cGF0aCBkPSJNMTAzLjYgMTA3LjRjMy41LTIuMiA4LjktNi4xIDEzLjgtMTIuNXM3LjMtMTIuNSA4LjUtMTYuNWMuNS0xLjcgMi4yLTcuNSAyLjItMTQuNyAwLTEwLjEtMy4zLTI1LjEtMTUuNC0zNi44LTE0LjUtMTQtMzIuMS0xNC4zLTM1LjctMTQuMy04IDAtMTUuNyAxLjktMjIuNiA1LjJDNDQgMjMgMzUuNyAzMS40IDMwLjggNDEuN2MtMS4zIDIuOC00IDQuNy03LjEgNS00IC4zLTcuNSA0LjQtOC45IDkuNi0uNSAxLjktMS42IDMuNS0zLjEgNC43QzQuNCA2Ni44IDAgNzUuNyAwIDg1YzAgNi44IDIuMyAxMy4xIDYuMSAxOC4yIDUuNSA3LjQgMTQuMiAxMi4yIDI0IDEyLjJoNDcuMWM0LjQgMCAxMS0uNSAxOC4zLTMuNSAzLjItMS40IDUuOS0zIDguMS00LjV6IiBmaWxsPSIjNDQ0Ii8+PHBhdGggZD0iTTExOS44IDY0LjNjLjEtMTcuMS0xMC40LTI4LTEyLjUtMzAuMUM5NSAyMi4xIDc5LjkgMjEuOCA3Ni45IDIxLjhjLTE3LjYgMC0zMy4zIDEwLjUtMzkuOSAyNi43LS42IDEuMy0xLjggMi4zLTMuNCAyLjNoLS40Yy01LjggMC0xMC42IDQuOC0xMC42IDEwLjd2LjVjMCAxLjQtLjggMi42LTEuOSAzLjNDMTMuNCA2OSA4LjggNzYuOCA4LjggODVjMCAxMi4yIDkuOSAyMi4zIDIyLjIgMjIuM2g0NS4yYzMuNi0uMSAxNy42LS45IDI5LjYtMTIgMi45LTIuOCAxMy45LTEzLjcgMTQtMzF6IiBmaWxsPSIjZGI4NDEyIi8+PHBhdGggZD0iTTExMC44IDU3LjRsLjIgMy4zYzAgMS4zLTEuMSAyLjQtMi4zIDIuNC0xLjMgMC0yLjMtMS4xLTIuMy0yLjRsLS4xLTIuOHYtLjNjMC0xLjIuOS0yLjIgMi4xLTIuM2guM2MuNyAwIDEuMy4zIDEuNy43LS4yLjEuMy41LjQgMS40em0tMy4zLTEwLjNjMCAxLjItMSAyLjMtMi4yIDIuM2gtLjFjLS44IDAtMS42LS41LTItMS4yLTQuNi04LjMtMTMuMy0xMy41LTIyLjgtMTMuNS0xLjIgMC0yLjMtMS0yLjMtMi4ydi0uMWMwLTEuMiAxLTIuMyAyLjItMi4zaC4xYTMwLjM3IDMwLjM3IDAgMCAxIDE1LjggNC40YzQuNiAyLjggOC40IDYuOCAxMS4xIDExLjUuMS4zLjIuNy4yIDEuMXpNNjkuMiA0OWwxOS40IDE0LjhjMS45IDEuNSAzLjEgMy41IDMuNSA1Ljd2LjJjLjEuNC4xLjguMSAxLjIgMCAuNi0uMSAxLjEtLjIgMS42LS40IDIuMi0xLjcgNC4yLTMuNSA1LjZMNjkuMyA5M2MtMi42IDItNS40IDIuNS03LjcgMS40LS4xLS4xLS4yLS4xLS4yLS4yLTItMS4yLTMuMi0zLjUtMy4yLTYuNHYtNi42aC01LjdjLTYuOCAwLTEyLTQuNy0xMi0xMC45IDAtNC44IDIuNi04LjUgNy4yLTEwLjMgMS4zLS41IDIuNy4yIDMuMiAxLjVzLS4xIDIuOC0xLjQgMy4zYy0yLjcgMS4xLTQgMi45LTQgNS41IDAgMy41IDMgNiA3IDZoOC4xYy41IDAgMSAuMiAxLjQuNi43LjYgMS4xIDEuNyAxLjEgMi42djguNGMwIDEuMy40IDIgLjcgMi4xLjQuMiAxLjMgMCAyLjQtLjlsMTkuMi0xNC45YzEuMi0uOSAxLjgtMi4xIDEuOC0zLjNzLS42LTIuMy0xLjctMy4xTDY2LjIgNTNjLTEuMS0uOS0yLTEuMS0yLjQtLjktLjMuMi0uNy45LS43IDIuMXY3LjZjMCAuOS0uNSAxLjctMS4yIDIuMS0uNC4zLS44LjQtMS4zLjQtMS40IDAtMi41LTEuMS0yLjUtMi41di03LjZjMC0zLjEgMS4zLTUuNSAzLjUtNi42bC43LS4zYzIuMS0uNyA0LjYtLjEgNi45IDEuN3oiIGZpbGw9IiM0NDQiLz48L3N2Zz4=
 // ==/UserScript==
 
 (function () {
@@ -114,15 +113,15 @@
             storage: 'hash'
         },
         'aliyun': {
-            reg: /((?:https?:\/\/)?(?:(?:www\.)?aliyundrive\.com\/s|alywp\.net)\/[a-zA-Z0-9]+)/,
+            reg: /((?:https?:\/\/)?(?:(?:www\.)?aliyundrive\.com\/s|alywp\.net)\/[a-zA-Z\d]+)/,
             host: /www\.aliyundrive\.com|alywp\.net/,
-            input: ['.ant-input', 'input[type="text"]'],
-            button: ['.button--fep7l', 'button[type="submit"]'],
+            input: ['form .ant-input', 'form input[type="text"]'],
+            button: ['form .button--fep7l', 'form button[type="submit"]'],
             name: '阿里云盘',
             storage: 'hash'
         },
         'weiyun': {
-            reg: /((?:https?:\/\/)?share\.weiyun\.com\/[a-zA-Z0-9]+)/,
+            reg: /((?:https?:\/\/)?share\.weiyun\.com\/[a-zA-Z\d]+)/,
             host: /share\.weiyun\.com/,
             input: ['.mod-card-s input[type=password]'],
             button: ['.mod-card-s .btn-main'],
@@ -130,15 +129,15 @@
             storage: 'hash'
         },
         'lanzou': {
-            reg: /((?:https?:\/\/)?(?:[a-zA-Z0-9\-.]+)?lanzou[a-z]\.com\/[a-zA-Z0-9_\-]+)/,
-            host: /(?:[a-zA-Z0-9-.]+)?lanzou[a-z]\.com/,
+            reg: /((?:https?:\/\/)?(?:[a-zA-Z0-9\-.]+)?lanzou[a-z]\.com\/[a-zA-Z\d_\-]+)/,
+            host: /(?:[a-zA-Z\d-.]+)?lanzou[a-z]\.com/,
             input: ['#pwd'],
             button: ['.passwddiv-btn', '#sub'],
             name: '蓝奏云',
             storage: 'hash'
         },
         'tianyi': {
-            reg: /((?:https?:\/\/)?cloud\.189\.cn\/(?:t\/|web\/share\?code=)?[a-zA-Z0-9]+)/,
+            reg: /((?:https?:\/\/)?cloud\.189\.cn\/(?:t\/|web\/share\?code=)?[a-zA-Z\d]+)/,
             host: /cloud\.189\.cn/,
             input: ['.access-code-item #code_txt'],
             button: ['.access-code-item .visit'],
@@ -146,7 +145,7 @@
             storage: 'hash'
         },
         'caiyun': {
-            reg: /((?:https?:\/\/)?caiyun\.139\.com\/m\/i\?[a-zA-Z0-9]+)/,
+            reg: /((?:https?:\/\/)?caiyun\.139\.com\/m\/i\?[a-zA-Z\d]+)/,
             host: /caiyun\.139\.com/,
             input: ['.token-form input[type=text]'],
             button: ['.token-form .btn-token'],
@@ -171,7 +170,7 @@
             storage: 'hash'
         },
         '360': {
-            reg: /((?:https?:\/\/)?(?:[a-zA-Z0-9\-.]+)?yunpan\.360\.cn(\/lk)?\/surl_[\w]{6,})/,
+            reg: /((?:https?:\/\/)?(?:[a-zA-Z\d\-.]+)?yunpan\.360\.cn(\/lk)?\/surl_\w{6,})/,
             host: /yunpan\.360\.cn/,
             input: ['.pwd-input'],
             button: ['.submit-btn'],
@@ -179,7 +178,7 @@
             storage: 'hash'
         },
         '115': {
-            reg: /((?:https?:\/\/)?115\.com\/s\/[a-zA-Z0-9]+)/,
+            reg: /((?:https?:\/\/)?115\.com\/s\/[a-zA-Z\d]+)/,
             host: /115\.com/,
             input: ['.form-decode input'],
             button: ['.form-decode .submit a'],
@@ -187,23 +186,23 @@
             storage: 'hash'
         },
         'cowtransfer': {
-            reg: /((?:https?:\/\/)?(?:[a-zA-Z0-9-.]+)?cowtransfer\.com\/s\/[a-zA-Z0-9]+)/,
-            host: /(?:[a-zA-Z0-9-.]+)?cowtransfer\.com/,
+            reg: /((?:https?:\/\/)?(?:[a-zA-Z\d-.]+)?cowtransfer\.com\/s\/[a-zA-Z\d]+)/,
+            host: /(?:[a-zA-Z\d-.]+)?cowtransfer\.com/,
             input: ['.receive-code-input input'],
             button: ['.open-button'],
             name: '奶牛快传',
             storage: 'hash'
         },
         'ctfile': {
-            reg: /((?:https?:\/\/)?(?:[a-zA-Z0-9-.]+)?ctfile\.com\/\w+\/[a-zA-Z0-9-]+)/,
-            host: /(?:[a-zA-Z0-9-.]+)?ctfile\.com/,
+            reg: /((?:https?:\/\/)?(?:[a-zA-Z\d-.]+)?ctfile\.com\/\w+\/[a-zA-Z\d-]+)/,
+            host: /(?:[a-zA-Z\d-.]+)?ctfile\.com/,
             input: ['#passcode'],
             button: ['.card-body button'],
             name: '城通网盘',
             storage: 'hash'
         },
         'quark': {
-            reg: /((?:https?:\/\/)?pan\.quark\.cn\/s\/[a-zA-Z0-9-]+)/,
+            reg: /((?:https?:\/\/)?pan\.quark\.cn\/s\/[a-zA-Z\d-]+)/,
             host: /pan\.quark\.cn/,
             input: ['.ant-input'],
             button: ['.ant-btn-primary'],
@@ -211,23 +210,35 @@
             storage: 'local',
             storagePwdName: 'tmp_quark_pwd'
         },
+        'flowus': {
+            reg: /((?:https?:\/\/)?flowus\.cn\/[\S ^\/]*\/?share\/[a-z\d]{8}-[a-z\d]{4}-[a-z\d]{4}-[a-z\d]{4}-[a-z\d]{12})/,
+            host: /flowus\.cn/,
+            name: 'FlowUs息流',
+            storage: 'hash'
+        },
         'chrome': {
-            reg: /((?:https?:\/\/)?chrome\.google\.com\/webstore\/.+?\/([a-z]{32}))/,
+            reg: /^https?:\/\/chrome.google.com\/webstore\/.+?\/([a-z]{32})(?=[\/#?]|$)/,
             host: /chrome\.google\.com/,
             replaceHost: "chrome.crxsoso.com",
             name: 'Chrome商店',
         },
         'edge': {
-            reg: /((?:https?:\/\/)?microsoftedge\.microsoft\.com\/addons\/.+?\/([a-z]{32}))/,
+            reg: /^https?:\/\/microsoftedge.microsoft.com\/addons\/.+?\/([a-z]{32})(?=[\/#?]|$)/,
             host: /microsoftedge\.microsoft\.com/,
             replaceHost: "microsoftedge.crxsoso.com",
             name: 'Edge商店',
         },
         'firefox': {
-            reg: /((?:https?:\/\/)?addons\.mozilla\.org\/.*?addon\/([^\/<>"'?#^\s]+))/,
+            reg: /^https?:\/\/(reviewers\.)?(addons\.mozilla\.org|addons(?:-dev)?\.allizom\.org)\/.*?(?:addon|review)\/([^/<>"'?#]+)/,
             host: /addons\.mozilla\.org/,
             replaceHost: "addons.crxsoso.com",
             name: 'Firefox商店',
+        },
+        'microsoft': {
+            reg: /^https?:\/\/(?:apps|www).microsoft.com\/(?:store|p)\/.+?\/([a-zA-Z\d]{10,})(?=[\/#?]|$)/,
+            host: /(apps|www)\.microsoft\.com/,
+            replaceHost: "apps.crxsoso.com",
+            name: 'Windows商店',
         },
     };
 
@@ -263,6 +274,7 @@
         // 监听选择事件
         addPageListener() {
             document.addEventListener("mouseup", this.smartIdentify.bind(this), true);
+            document.addEventListener("keydown", this.pressKey.bind(this), true);
         },
 
         smartIdentify(event, str = '') {
@@ -327,6 +339,17 @@
                         }
                     });
                 }
+            }
+        },
+
+        pressKey(event) {
+            if (event.key === 'Enter') {
+                let confirmBtn = document.querySelector('.panai-container .swal2-confirm');
+                confirmBtn && confirmBtn.click()
+            }
+            if (event.key === 'Escape') {
+                let cancelBtn = document.querySelector('.panai-container .swal2-cancel');
+                cancelBtn && cancelBtn.click()
             }
         },
 

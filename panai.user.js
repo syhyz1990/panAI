@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name              网盘智能识别助手
 // @namespace         https://github.com/syhyz1990/panAI
-// @version           1.8.3
+// @version           1.8.4
 // @author            YouXiaoHou
 // @description       智能识别选中文字中的🔗网盘链接和🔑提取码，识别成功打开网盘链接并自动填写提取码，省去手动复制提取码在输入的烦恼。支持识别 ✅百度网盘 ✅阿里云盘 ✅腾讯微云 ✅蓝奏云 ✅天翼云盘 ✅和彩云 ✅迅雷云盘 ✅123云盘 ✅360云盘 ✅115网盘 ✅奶牛快传 ✅城通网盘 ✅夸克网盘 ✅FlowUs息流 ✅Chrome 扩展商店 ✅Edge 扩展商店 ✅Firefox 扩展商店 ✅Windows 应用商店。
 // @license           AGPL-3.0-or-later
@@ -395,7 +395,7 @@
         //正则解析提取码
         parsePwd(text) {
             text = text.replace(/\u200B/g, '');
-            let reg = /(?<=\s*(密|提取|访问|訪問|key|password|pwd|#)[码碼]?[：:=]?\s*)[a-zA-Z0-9]{3,8}/i;
+            let reg = /(?<=\s*(?:密|提取|访问|訪問|key|password|pwd|#)\s*[码碼]?\s*[：:=]?\s*)[a-zA-Z0-9]{3,8}/i;
             if (reg.test(text)) {
                 let match = text.match(reg);
                 return match[0];

@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name              网盘智能识别助手
 // @namespace         https://github.com/syhyz1990/panAI
-// @version           1.8.5
+// @version           1.8.6
 // @author            YouXiaoHou
 // @description       智能识别选中文字中的🔗网盘链接和🔑提取码，识别成功打开网盘链接并自动填写提取码，省去手动复制提取码在输入的烦恼。支持识别 ✅百度网盘 ✅阿里云盘 ✅腾讯微云 ✅蓝奏云 ✅天翼云盘 ✅移动云盘 ✅迅雷云盘 ✅123云盘 ✅360云盘 ✅115网盘 ✅奶牛快传 ✅城通网盘 ✅夸克网盘 ✅FlowUs息流 ✅Chrome 扩展商店 ✅Edge 扩展商店 ✅Firefox 扩展商店 ✅Windows 应用商店。
 // @license           AGPL-3.0-or-later
@@ -44,7 +44,7 @@
 
     let util = {
         clog(c) {
-            console.group('[网盘智能识别助手]');
+            console.group("%c %c [网盘智能识别助手]",`background:url(${GM_info.script.icon}) center center no-repeat;background-size:14px;padding:3px`,"")
             console.log(c);
             console.groupEnd();
         },
@@ -277,9 +277,21 @@
             document.addEventListener("keydown", this.pressKey.bind(this), true);
         },
 
+        // ⚠️可能会增加时间⚠️ 如果有需要可以增加选项
+        // 获取选择内容的HTML和文本(增加兼容性) 或 DOM（节点遍历）
+        getSelectionHTML(selection, isDOM = false){
+            // Range 转 DocumentFragment
+            const docFragment = selection.getRangeAt(0).cloneContents();
+            const testDiv = document.createElement("div");
+            testDiv.appendChild(docFragment);
+            // 拼接选中文本，增加兼容
+            return isDOM ? testDiv : selection.toString() + testDiv.innerHTML;
+
+        },
+
         smartIdentify(event, str = '') {
             let selection = window.getSelection();
-            let text = str || selection.toString();
+            let text = str || this.getSelectionHTML(selection);
             if (text !== this.lastText && text !== '') { //选择相同文字或空不识别
                 let start = performance.now();
                 this.lastText = text;
@@ -385,11 +397,13 @@
 
         //正则解析超链接类型网盘链接
         parseParentLink(selection) {
-            let anchorNode = selection.anchorNode.parentElement.href;
-            let focusNode = selection.focusNode.parentElement.href;
-            if (anchorNode) return this.parseLink(anchorNode);
-            if (focusNode) return this.parseLink(focusNode);
-            return this.parseLink();
+            const dom=this.getSelectionHTML(selection,true).querySelector('*[href]');
+            return this.parseLink(dom?dom.href:"");
+            // let anchorNode = selection.anchorNode.parentElement.href;
+            // let focusNode = selection.focusNode.parentElement.href;
+            // if (anchorNode) return this.parseLink(anchorNode);
+            // if (focusNode) return this.parseLink(focusNode);
+            // return this.parseLink();
         },
 
         //正则解析提取码

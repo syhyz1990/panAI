@@ -280,13 +280,14 @@
         // ⚠️可能会增加时间⚠️ 如果有需要可以增加选项
         // 获取选择内容的HTML和文本(增加兼容性) 或 DOM（节点遍历）
         getSelectionHTML(selection, isDOM = false){
-            // Range 转 DocumentFragment
-            const docFragment = selection.getRangeAt(0).cloneContents();
             const testDiv = document.createElement("div");
-            testDiv.appendChild(docFragment);
+            if(!selection.isCollapsed){
+                // Range 转 DocumentFragment
+                const docFragment = selection.getRangeAt(0).cloneContents();
+                testDiv.appendChild(docFragment);
+            }
             // 拼接选中文本，增加兼容
             return isDOM ? testDiv : selection.toString() + testDiv.innerHTML;
-
         },
 
         smartIdentify(event, str = '') {

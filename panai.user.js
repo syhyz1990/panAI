@@ -377,7 +377,9 @@
         parseLink(text = '') {
             let obj = {name: '', link: ''};
             if (text) {
-                text = decodeURIComponent(text);
+                try{
+                    text = decodeURIComponent(text);
+                }catch{}
                 text = text.replace(/[点點]/g, '.');
                 text = text.replace(/[\u4e00-\u9fa5\u200B()（）,，]/g, '');
                 text = text.replace(/lanzous/g, 'lanzouw'); //修正lanzous打不开的问题

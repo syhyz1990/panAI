@@ -130,7 +130,7 @@
             storage: 'hash'
         },
         'lanzou': {
-            reg: /((?:https?:\/\/)?(?:[a-zA-Z0-9\-.]+)?lanzou[a-z]\.com\/[a-zA-Z\d_\-]+)/,
+            reg: /((?:https?:\/\/)?(?:[a-zA-Z0-9\-.]+)?lanzou[a-z]\.com\/[a-zA-Z\d_\-]+(?:\/\w+)?)/,
             host: /(?:[a-zA-Z\d-.]+)?lanzou[a-z]\.com/,
             input: ['#pwd'],
             button: ['.passwddiv-btn', '#sub'],
@@ -195,8 +195,8 @@
             storage: 'hash'
         },
         'ctfile': {
-            reg: /((?:https?:\/\/)?(?:[a-zA-Z\d-.]+)?ctfile\.com\/\w+\/[a-zA-Z\d-]+)/,
-            host: /(?:[a-zA-Z\d-.]+)?ctfile\.com/,
+            reg: /((?:https?:\/\/)?(?:[a-zA-Z\d-.]+)?(?:ctfile|545c|u062)\.com\/\w+\/[a-zA-Z\d-]+)/,
+            host: /(?:[a-zA-Z\d-.]+)?(?:ctfile|545c|u062)\.com/,
             input: ['#passcode'],
             button: ['.card-body button'],
             name: '城通网盘',
@@ -210,6 +210,14 @@
             name: '夸克网盘',
             storage: 'local',
             storagePwdName: 'tmp_quark_pwd'
+        },
+        'mega': {
+            reg: /((?:https?:\/\/)?(?:mega\.nz|mega\.co\.nz)\/#F?![\w!-]+)/,
+            host: /(?:mega\.nz|mega\.co\.nz)/,
+            input: ['.dlkey-dialog input'],
+            button: ['.dlkey-dialog .fm-dialog-new-folder-button'],
+            name: 'Mega',
+            storage: 'local'
         },
         'flowus': {
             reg: /((?:https?:\/\/)?flowus\.cn\/[\S ^\/]*\/?share\/[a-z\d]{8}-[a-z\d]{4}-[a-z\d]{4}-[a-z\d]{4}-[a-z\d]{12})/,
@@ -240,7 +248,7 @@
             host: /(apps|www)\.microsoft\.com/,
             replaceHost: "apps.crxsoso.com",
             name: 'Windows商店',
-        },
+        }
     };
 
     let main = {
@@ -383,7 +391,7 @@
                 } catch {
                 }
                 text = text.replace(/[点點]/g, '.');
-                text = text.replace(/[\u4e00-\u9fa5\u200B()（）,，]/g, '');
+                text = text.replace(/[\u4e00-\u9fa5\u200B()（）,，\u1000-\uFFFF]/g, '');
                 text = text.replace(/lanzous/g, 'lanzouw'); //修正lanzous打不开的问题
                 for (let name in opt) {
                     let val = opt[name];
@@ -410,7 +418,7 @@
         //正则解析提取码
         parsePwd(text) {
             text = text.replace(/\u200B/g, '');
-            let reg = /(?<=\s*(?:密|提取|访问|訪問|key|password|pwd|#)\s*[码碼]?\s*[：:=]?\s*)[a-zA-Z0-9]{3,8}/i;
+            let reg = /(?<=\s*(?:密|提取|访问|訪問|key|password|pwd|#|\?p)\s*[码碼]?\s*[：:=]?\s*)[a-zA-Z0-9]{3,8}/i;
             if (reg.test(text)) {
                 let match = text.match(reg);
                 return match[0];

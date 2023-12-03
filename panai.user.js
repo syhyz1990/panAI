@@ -130,7 +130,7 @@
             storage: 'hash'
         },
         'lanzou': {
-            reg: /((?:https?:\/\/)?(?:[a-zA-Z0-9\-.]+)?lanzou[a-z]\.com\/[a-zA-Z\d_\-]+(?:\/\w+)?)/,
+            reg: /((?:https?:\/\/)?(?:[a-zA-Z0-9\-.]+)?lanzou[a-z]\.com\/[a-zA-Z\d_\-]+(?:\/[\w-]+)?)/,
             host: /(?:[a-zA-Z\d-.]+)?lanzou[a-z]\.com/,
             input: ['#pwd'],
             button: ['.passwddiv-btn', '#sub'],

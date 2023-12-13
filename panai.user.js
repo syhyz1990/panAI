@@ -271,6 +271,9 @@
             }, {
                 name: 'setting_timer',
                 value: 5000
+            }, {
+                name: 'setting_hotkeys',
+                value: 'F1'
             }];
 
             value.forEach((v) => {
@@ -376,7 +379,9 @@
         },
 
         addHotKey() {
-            hotkeys('f1', (event, handler) => {
+            //获取设置中的快捷键
+            let hotkey = util.getValue('setting_hotkeys');
+            hotkeys(hotkey, (event, handler) => {
                 event.preventDefault();
                 this.showIdentifyBox();
             });
@@ -527,7 +532,7 @@
                 title: '识别剪切板中文字',
                 input: 'textarea',
                 inputPlaceholder: '若选方式一，请按 Ctrl+V 粘贴要识别的文字',
-                html: `<div style="font-size: 12px;color: #999;margin-bottom: 8px;text-align: center;">提示：在任意网页按下 <span style="font-weight: 700;">F1</span> 键可快速打开本窗口。</div><div style="font-size: 14px;line-height: 22px;padding: 10px 0 5px;text-align: left;"><div style="font-size: 16px;margin-bottom: 8px;font-weight: 700;">支持以下两种方式：</div><div><b>方式一：</b>直接粘贴文字到输入框，点击“识别方框内容”按钮。</div><div><b>方式二：</b>点击“读取剪切板”按钮。<span style="color: #d14529;font-size: 12px;">会弹出“授予网站读取剪切板”权限，同意后会自动识别剪切板中的文字。</span></div></div>`,
+                html: `<div style="font-size: 12px;color: #999;margin-bottom: 8px;text-align: center;">提示：在任意网页按下 <span style="font-weight: 700;">${ util.getValue("setting_hotkeys") }</span> 键可快速打开本窗口。</div><div style="font-size: 14px;line-height: 22px;padding: 10px 0 5px;text-align: left;"><div style="font-size: 16px;margin-bottom: 8px;font-weight: 700;">支持以下两种方式：</div><div><b>方式一：</b>直接粘贴文字到输入框，点击“识别方框内容”按钮。</div><div><b>方式二：</b>点击“读取剪切板”按钮。<span style="color: #d14529;font-size: 12px;">会弹出“授予网站读取剪切板”权限，同意后会自动识别剪切板中的文字。</span></div></div>`,
                 showCloseButton: false,
                 showDenyButton: true,
                 confirmButtonText: '识别方框内容',
@@ -555,6 +560,7 @@
                               class="panai-setting-checkbox"></label>
                               <label class="panai-setting-label">倒计时结束自动打开<input type="checkbox" id="S-Timer-Open" ${util.getValue('setting_timer_open') ? 'checked' : ''} class="panai-setting-checkbox"></label>
                               <label class="panai-setting-label" id="Panai-Range-Wrapper" style="${util.getValue('setting_timer_open') ? '' : 'display: none'}"><span>倒计时 <span id="Timer-Value">（${util.getValue('setting_timer') / 1000}秒）</span></span><input type="range" id="S-Timer" min="0" max="10000" step="500" value="${util.getValue('setting_timer')}" style="width: 200px;"></label>
+                              <label class="panai-setting-label">快捷键设置<input type="text" id="S-hotkeys" value="${util.getValue('setting_hotkeys')}" style="width: 100px;"></label> 
                             </div>`;
             Swal.fire({
                 title: '识别助手配置',
@@ -583,13 +589,16 @@
                 util.setValue('setting_timer', e.target.value);
                 document.getElementById('Timer-Value').innerText = `（${e.target.value / 1000}秒）`;
             });
+            document.getElementById('S-hotkeys').addEventListener('change', (e) => {
+                util.setValue('setting_hotkeys', e.target.value);
+            });
         },
 
         registerMenuCommand() {
             GM_registerMenuCommand('👀 已识别：' + util.getValue('setting_success_times') + '次', () => {
                 this.clearIdentifyTimes();
             });
-            GM_registerMenuCommand('📋️ 识别剪切板中文字（快捷键 F1）', () => {
+            GM_registerMenuCommand(`📋️ 识别剪切板中文字（快捷键 ${ util.getValue('setting_hotkeys') }）`, () => {
                 this.showIdentifyBox();
             });
             GM_registerMenuCommand('⚙️ 设置', () => {

@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name              网盘智能识别助手
 // @namespace         https://github.com/syhyz1990/panAI
-// @version           1.8.8
+// @version           1.9.1
 // @author            YouXiaoHou
 // @description       智能识别选中文字中的🔗网盘链接和🔑提取码，识别成功打开网盘链接并自动填写提取码，省去手动复制提取码在输入的烦恼。支持识别 ✅百度网盘 ✅阿里云盘 ✅腾讯微云 ✅蓝奏云 ✅天翼云盘 ✅移动云盘 ✅迅雷云盘 ✅123云盘 ✅360云盘 ✅115网盘 ✅奶牛快传 ✅城通网盘 ✅夸克网盘 ✅FlowUs息流 ✅Chrome 扩展商店 ✅Edge 扩展商店 ✅Firefox 扩展商店 ✅Windows 应用商店。
 // @license           AGPL-3.0-or-later
@@ -114,8 +114,8 @@
             storage: 'hash'
         },
         'aliyun': {
-            reg: /((?:https?:\/\/)?(?:(?:www\.)?aliyundrive\.com\/s|alywp\.net)\/[a-zA-Z\d]+)/,
-            host: /www\.aliyundrive\.com|alywp\.net/,
+            reg: /((?:https?:\/\/)?(?:(?:www\.)?(?:aliyundrive|alipan)\.com\/s|alywp\.net)\/[a-zA-Z\d]+)/,
+            host: /www\.(aliyundrive|alipan)\.com|alywp\.net/,
             input: ['form .ant-input', 'form input[type="text"]'],
             button: ['form .button--fep7l', 'form button[type="submit"]'],
             name: '阿里云盘',
@@ -130,7 +130,7 @@
             storage: 'hash'
         },
         'lanzou': {
-            reg: /((?:https?:\/\/)?(?:[a-zA-Z0-9\-.]+)?lanzou[a-z]\.com\/[a-zA-Z\d_\-]+)/,
+            reg: /((?:https?:\/\/)?(?:[a-zA-Z0-9\-.]+)?lanzou[a-z]\.com\/[a-zA-Z\d_\-]+(?:\/[\w-]+)?)/,
             host: /(?:[a-zA-Z\d-.]+)?lanzou[a-z]\.com/,
             input: ['#pwd'],
             button: ['.passwddiv-btn', '#sub'],
@@ -195,8 +195,8 @@
             storage: 'hash'
         },
         'ctfile': {
-            reg: /((?:https?:\/\/)?(?:[a-zA-Z\d-.]+)?ctfile\.com\/\w+\/[a-zA-Z\d-]+)/,
-            host: /(?:[a-zA-Z\d-.]+)?ctfile\.com/,
+            reg: /((?:https?:\/\/)?(?:[a-zA-Z\d-.]+)?(?:ctfile|545c|u062)\.com\/\w+\/[a-zA-Z\d-]+)/,
+            host: /(?:[a-zA-Z\d-.]+)?(?:ctfile|545c|u062)\.com/,
             input: ['#passcode'],
             button: ['.card-body button'],
             name: '城通网盘',
@@ -210,6 +210,14 @@
             name: '夸克网盘',
             storage: 'local',
             storagePwdName: 'tmp_quark_pwd'
+        },
+        'mega': {
+            reg: /((?:https?:\/\/)?(?:mega\.nz|mega\.co\.nz)\/#F?![\w!-]+)/,
+            host: /(?:mega\.nz|mega\.co\.nz)/,
+            input: ['.dlkey-dialog input'],
+            button: ['.dlkey-dialog .fm-dialog-new-folder-button'],
+            name: 'Mega',
+            storage: 'local'
         },
         'flowus': {
             reg: /((?:https?:\/\/)?flowus\.cn\/[\S ^\/]*\/?share\/[a-z\d]{8}-[a-z\d]{4}-[a-z\d]{4}-[a-z\d]{4}-[a-z\d]{12})/,
@@ -240,7 +248,7 @@
             host: /(apps|www)\.microsoft\.com/,
             replaceHost: "apps.crxsoso.com",
             name: 'Windows商店',
-        },
+        }
     };
 
     let main = {
@@ -263,6 +271,9 @@
             }, {
                 name: 'setting_timer',
                 value: 5000
+            }, {
+                name: 'setting_hotkeys',
+                value: 'F1'
             }];
 
             value.forEach((v) => {
@@ -368,7 +379,9 @@
         },
 
         addHotKey() {
-            hotkeys('f1', (event, handler) => {
+            //获取设置中的快捷键
+            let hotkey = util.getValue('setting_hotkeys');
+            hotkeys(hotkey, (event, handler) => {
                 event.preventDefault();
                 this.showIdentifyBox();
             });
@@ -383,7 +396,7 @@
                 } catch {
                 }
                 text = text.replace(/[点點]/g, '.');
-                text = text.replace(/[\u4e00-\u9fa5\u200B()（）,，]/g, '');
+                text = text.replace(/[\u4e00-\u9fa5\u200B()（）,，\u1000-\uFFFF]/g, '');
                 text = text.replace(/lanzous/g, 'lanzouw'); //修正lanzous打不开的问题
                 for (let name in opt) {
                     let val = opt[name];
@@ -410,7 +423,7 @@
         //正则解析提取码
         parsePwd(text) {
             text = text.replace(/\u200B/g, '');
-            let reg = /(?<=\s*(?:密|提取|访问|訪問|key|password|pwd|#)\s*[码碼]?\s*[：:=]?\s*)[a-zA-Z0-9]{3,8}/i;
+            let reg = /(?<=\s*(?:密|提取|访问|訪問|key|password|pwd|#|\?p)\s*[码碼]?\s*[：:=]?\s*)[a-zA-Z0-9]{3,8}/i;
             if (reg.test(text)) {
                 let match = text.match(reg);
                 return match[0];
@@ -519,7 +532,7 @@
                 title: '识别剪切板中文字',
                 input: 'textarea',
                 inputPlaceholder: '若选方式一，请按 Ctrl+V 粘贴要识别的文字',
-                html: `<div style="font-size: 12px;color: #999;margin-bottom: 8px;text-align: center;">提示：在任意网页按下 <span style="font-weight: 700;">F1</span> 键可快速打开本窗口。</div><div style="font-size: 14px;line-height: 22px;padding: 10px 0 5px;text-align: left;"><div style="font-size: 16px;margin-bottom: 8px;font-weight: 700;">支持以下两种方式：</div><div><b>方式一：</b>直接粘贴文字到输入框，点击“识别方框内容”按钮。</div><div><b>方式二：</b>点击“读取剪切板”按钮。<span style="color: #d14529;font-size: 12px;">会弹出“授予网站读取剪切板”权限，同意后会自动识别剪切板中的文字。</span></div></div>`,
+                html: `<div style="font-size: 12px;color: #999;margin-bottom: 8px;text-align: center;">提示：在任意网页按下 <span style="font-weight: 700;">${ util.getValue("setting_hotkeys") }</span> 键可快速打开本窗口。</div><div style="font-size: 14px;line-height: 22px;padding: 10px 0 5px;text-align: left;"><div style="font-size: 16px;margin-bottom: 8px;font-weight: 700;">支持以下两种方式：</div><div><b>方式一：</b>直接粘贴文字到输入框，点击“识别方框内容”按钮。</div><div><b>方式二：</b>点击“读取剪切板”按钮。<span style="color: #d14529;font-size: 12px;">会弹出“授予网站读取剪切板”权限，同意后会自动识别剪切板中的文字。</span></div></div>`,
                 showCloseButton: false,
                 showDenyButton: true,
                 confirmButtonText: '识别方框内容',
@@ -547,6 +560,7 @@
                               class="panai-setting-checkbox"></label>
                               <label class="panai-setting-label">倒计时结束自动打开<input type="checkbox" id="S-Timer-Open" ${util.getValue('setting_timer_open') ? 'checked' : ''} class="panai-setting-checkbox"></label>
                               <label class="panai-setting-label" id="Panai-Range-Wrapper" style="${util.getValue('setting_timer_open') ? '' : 'display: none'}"><span>倒计时 <span id="Timer-Value">（${util.getValue('setting_timer') / 1000}秒）</span></span><input type="range" id="S-Timer" min="0" max="10000" step="500" value="${util.getValue('setting_timer')}" style="width: 200px;"></label>
+                              <label class="panai-setting-label">快捷键设置<input type="text" id="S-hotkeys" value="${util.getValue('setting_hotkeys')}" style="width: 100px;"></label> 
                             </div>`;
             Swal.fire({
                 title: '识别助手配置',
@@ -575,13 +589,16 @@
                 util.setValue('setting_timer', e.target.value);
                 document.getElementById('Timer-Value').innerText = `（${e.target.value / 1000}秒）`;
             });
+            document.getElementById('S-hotkeys').addEventListener('change', (e) => {
+                util.setValue('setting_hotkeys', e.target.value);
+            });
         },
 
         registerMenuCommand() {
             GM_registerMenuCommand('👀 已识别：' + util.getValue('setting_success_times') + '次', () => {
                 this.clearIdentifyTimes();
             });
-            GM_registerMenuCommand('📋️ 识别剪切板中文字（快捷键 F1）', () => {
+            GM_registerMenuCommand(`📋️ 识别剪切板中文字（快捷键 ${ util.getValue('setting_hotkeys') }）`, () => {
                 this.showIdentifyBox();
             });
             GM_registerMenuCommand('⚙️ 设置', () => {

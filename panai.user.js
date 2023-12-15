@@ -50,15 +50,11 @@
             console.groupEnd();
         },
         parseQuery(name) {
-            if (!location.search) {
-                let pd = location.href.match(/(?<=pwd\=)[\w-]+/);
-                if (pd) {
-                    return pd[0];
-                }
+            var reg = new RegExp(`(?<=${name}\\=)[\\w-]+`,"i")
+            let pd = location.href.match(reg);
+            if (pd) {
+                return pd[0];
             }
-            let reg = new RegExp("(^|&)" + name + "=([^&]*)(&|$)", "i");
-            let r = location.search.slice(1).match(reg);
-            if (r != null) return (r[2]);
             return null;
         },
 

@@ -49,10 +49,15 @@
             console.log(c);
             console.groupEnd();
         },
-
         parseQuery(name) {
+            if (!location.search) {
+                let pd = location.href.match(/(?<=pwd\=)[\w-]+/);
+                if (pd) {
+                    return pd[0];
+                }
+            }
             let reg = new RegExp("(^|&)" + name + "=([^&]*)(&|$)", "i");
-            let r = location.search.substr(1).match(reg);
+            let r = location.search.slice(1).match(reg);
             if (r != null) return (r[2]);
             return null;
         },
@@ -455,7 +460,9 @@
                 let val = opt[name];
                 if (panType === name) {
                     if (val.storage === 'local') {
-                        pwd = util.getValue(val.storagePwdName) ? util.getValue(val.storagePwdName) : '';
+                        //当前local存储的密码不一定是当前链接的密码，用户可能通过url直接访问或者恢复页面，这样取出来的密码可能是其他链接的
+                        //如果能从url中获取到密码，则应该优先使用url中获取的密码
+                        pwd = pwd || util.getValue(val.storagePwdName);
                         pwd && this.doFillAction(val.input, val.button, pwd);
                     }
                     if (val.storage === 'hash') {

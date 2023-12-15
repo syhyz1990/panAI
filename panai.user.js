@@ -50,7 +50,7 @@
             console.groupEnd();
         },
         parseQuery(name) {
-            var reg = new RegExp(`(?<=${name}\\=)[\\w-]+`,"i")
+            let reg = new RegExp(`(?<=${name}\\=)[\\w-]+`,"i")
             let pd = location.href.match(reg);
             if (pd) {
                 return pd[0];

@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name              网盘智能识别助手
 // @namespace         https://github.com/syhyz1990/panAI
-// @version           1.9.1
+// @version           1.9.4
 // @author            YouXiaoHou
 // @description       智能识别选中文字中的🔗网盘链接和🔑提取码，识别成功打开网盘链接并自动填写提取码，省去手动复制提取码在输入的烦恼。支持识别 ✅百度网盘 ✅阿里云盘 ✅腾讯微云 ✅蓝奏云 ✅天翼云盘 ✅移动云盘 ✅迅雷云盘 ✅123云盘 ✅360云盘 ✅115网盘 ✅奶牛快传 ✅城通网盘 ✅夸克网盘 ✅FlowUs息流 ✅Chrome 扩展商店 ✅Edge 扩展商店 ✅Firefox 扩展商店 ✅Windows 应用商店。
 // @license           AGPL-3.0-or-later
@@ -10,6 +10,7 @@
 // @updateURL         https://www.youxiaohou.com/panai.user.js
 // @downloadURL       https://www.youxiaohou.com/panai.user.js
 // @match             *://*/*
+// @exclude           https://www.futbin.com/*
 // @require           https://unpkg.com/sweetalert2@10.16.6/dist/sweetalert2.min.js
 // @require           https://unpkg.com/hotkeys-js/dist/hotkeys.min.js
 // @resource          swalStyle https://unpkg.com/sweetalert2@10.16.6/dist/sweetalert2.min.css
@@ -49,11 +50,12 @@
             console.log(c);
             console.groupEnd();
         },
-
         parseQuery(name) {
-            let reg = new RegExp("(^|&)" + name + "=([^&]*)(&|$)", "i");
-            let r = location.search.substr(1).match(reg);
-            if (r != null) return (r[2]);
+            let reg = new RegExp(`(?<=${name}\\=)(?:wss:[a-zA-Z0-9]+|[\\w-]+)`, "i")
+            let pd = location.href.replace(/%3A/g,":").match(reg);
+            if (pd) {
+                return pd[0];
+            }
             return null;
         },
 
@@ -211,6 +213,22 @@
             storage: 'local',
             storagePwdName: 'tmp_quark_pwd'
         },
+        'vdisk': {
+            reg: /(?:https?:\/\/)?vdisk.weibo.com\/lc\/\w+/,
+            host: /vdisk\.weibo\.com/,
+            input: ['#keypass'],
+            button: ['.search_btn_wrap a'],
+            name: '微盘',
+            storage: 'hash',
+        },
+        'wenshushu': {
+            reg: /((?:https?:\/\/)?(?:www\.wenshushu|ws28)\.cn\/(?:k|box|f)\/\w+)/,
+            host: /www\.wenshushu\.cn/,
+            input: ['.pwd-inp .ivu-input'],
+            button: ['.pwd-inp .ivu-btn'],
+            name: '文叔叔网盘',
+            storage: 'hash'
+        },
         'mega': {
             reg: /((?:https?:\/\/)?(?:mega\.nz|mega\.co\.nz)\/#F?![\w!-]+)/,
             host: /(?:mega\.nz|mega\.co\.nz)/,
@@ -218,6 +236,76 @@
             button: ['.dlkey-dialog .fm-dialog-new-folder-button'],
             name: 'Mega',
             storage: 'local'
+        },
+        '520vip': {
+            reg: /((?:https?:\/\/)?www\.(?:520-vip|eos-53)\.com\/file-\d+\.html)/,
+            host: /www\.520-vip\.com/,
+            name: '520云盘',
+        },
+        '567pan': {
+          reg: /((?:https?:\/\/)?www\.567(?:pan|yun|file)\.(?:com|cn)\/file-\d+\.html)/,
+          host: /www\.567pan\.cn/,
+          name: '567盘',
+        },
+        'ayunpan': {
+          reg: /((?:https?:\/\/)?www\.ayunpan\.com\/file-\d+\.html)/,
+          host: /www\.ayunpan\.com/,
+          name: 'AYunPan',
+        },
+        'iycdn.com': {
+          reg: /((?:https?:\/\/)?www\.iycdn\.com\/file-\d+\.html)/,
+          host: /www\.iycdn\.com/,
+          name: '爱优网盘',
+        },
+        'feimaoyun': {
+          reg: /((?:https?:\/\/)?www\.feimaoyun\.com\/s\/[0-9a-zA-Z]+)/,
+          host: /www\.feimaoyun\.com/,
+          name: '飞猫盘',
+        },
+        'uyunp.com': {
+            reg: /((?:https?:\/\/)?download\.uyunp\.com\/share\/s\/short\/\?surl=[0-9a-zA-Z]+)/,
+            host: /download\.uyunp\.com/,
+            name: '优云下载',
+        },
+        'dudujb': {
+            reg: /(?:https?:\/\/)?www\.dudujb\.com\/file-\d+\.html/,
+            host: /www\.dudujb\.com/,
+            name: '贵族网盘',
+        },
+        'xunniu': {
+            reg: /(?:https?:\/\/)?www\.xunniu(?:fxp|wp|fx)\.com\/file-\d+\.html/,
+            host: /www\.xunniuwp\.com/,
+            name: '迅牛网盘',
+        },
+        'xueqiupan': {
+            reg: /(?:https?:\/\/)?www\.xueqiupan\.com\/file-\d+\.html/,
+            host: /www\.xueqiupan\.com/,
+            name: '雪球云盘',
+        },
+        '77file': {
+            reg: /(?:https?:\/\/)?www\.77file\.com\/s\/[a-zA-Z\d]+/,
+            host: /www\.77file\.com/,
+            name: '77file',
+        },
+        'ownfile': {
+            reg: /(?:https?:\/\/)?ownfile\.net\/files\/[a-zA-Z\d]+\.html/,
+            host: /ownfile\.net/,
+            name: 'OwnFile',
+        },
+        'feiyunfile': {
+            reg: /(?:https?:\/\/)?www\.feiyunfile\.com\/file\/[\w=]+\.html/,
+            host: /www\.feiyunfile\.com/,
+            name: '飞云网盘',
+        },
+        'yifile': {
+            reg: /(?:https?:\/\/)?www\.yifile\.com\/f\/\w+/,
+            host: /www\.yifile\.com/,
+            name: 'YiFile',
+        },
+        'dufile': {
+            reg: /(?:https?:\/\/)?dufile\.com\/file\/\w+\.html/,
+            host: /dufile\.com/,
+            name: 'duFile',
         },
         'flowus': {
             reg: /((?:https?:\/\/)?flowus\.cn\/[\S ^\/]*\/?share\/[a-z\d]{8}-[a-z\d]{4}-[a-z\d]{4}-[a-z\d]{4}-[a-z\d]{12})/,
@@ -396,7 +484,7 @@
                 } catch {
                 }
                 text = text.replace(/[点點]/g, '.');
-                text = text.replace(/[\u4e00-\u9fa5\u200B()（）,，\u1000-\uFFFF]/g, '');
+                text = text.replace(/[\u4e00-\u9fa5()（）,\u200B，\uD83C-\uDBFF\uDC00-\uDFFF]/g, '');
                 text = text.replace(/lanzous/g, 'lanzouw'); //修正lanzous打不开的问题
                 for (let name in opt) {
                     let val = opt[name];
@@ -422,8 +510,8 @@
 
         //正则解析提取码
         parsePwd(text) {
-            text = text.replace(/\u200B/g, '');
-            let reg = /(?<=\s*(?:密|提取|访问|訪問|key|password|pwd|#|\?p)\s*[码碼]?\s*[：:=]?\s*)[a-zA-Z0-9]{3,8}/i;
+            text = text.replace(/\u200B/g, '').replace('%3A', ":");
+            let reg = /wss:[a-zA-Z0-9]+|(?<=\s*(?:密|提取|访问|訪問|key|password|pwd|#|\?p)\s*[码碼]?\s*[：:=]?\s*)[a-zA-Z0-9]{3,8}/i;
             if (reg.test(text)) {
                 let match = text.match(reg);
                 return match[0];
@@ -455,11 +543,13 @@
                 let val = opt[name];
                 if (panType === name) {
                     if (val.storage === 'local') {
-                        pwd = util.getValue(val.storagePwdName) ? util.getValue(val.storagePwdName) : '';
+                        //当前local存储的密码不一定是当前链接的密码，用户可能通过url直接访问或者恢复页面，这样取出来的密码可能是其他链接的
+                        //如果能从url中获取到密码，则应该优先使用url中获取的密码
+                        pwd = pwd || util.getValue(val.storagePwdName);
                         pwd && this.doFillAction(val.input, val.button, pwd);
                     }
                     if (val.storage === 'hash') {
-                        if (!/^[a-zA-Z0-9]{3,8}$/.test(pwd)) { //过滤掉不正常的Hash
+                        if (!/^(?:wss:[a-zA-Z\d]+|[a-zA-Z0-9]{3,8})$/.test(pwd)) { //过滤掉不正常的Hash
                             return;
                         }
                         pwd && this.doFillAction(val.input, val.button, pwd);

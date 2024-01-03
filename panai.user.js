@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name              网盘智能识别助手
 // @namespace         https://github.com/syhyz1990/panAI
-// @version           1.9.4
+// @version           1.9.5
 // @author            YouXiaoHou
 // @description       智能识别选中文字中的🔗网盘链接和🔑提取码，识别成功打开网盘链接并自动填写提取码，省去手动复制提取码在输入的烦恼。支持识别 ✅百度网盘 ✅阿里云盘 ✅腾讯微云 ✅蓝奏云 ✅天翼云盘 ✅移动云盘 ✅迅雷云盘 ✅123云盘 ✅360云盘 ✅115网盘 ✅奶牛快传 ✅城通网盘 ✅夸克网盘 ✅FlowUs息流 ✅Chrome 扩展商店 ✅Edge 扩展商店 ✅Firefox 扩展商店 ✅Windows 应用商店。
 // @license           AGPL-3.0-or-later
@@ -10,7 +10,6 @@
 // @updateURL         https://www.youxiaohou.com/panai.user.js
 // @downloadURL       https://www.youxiaohou.com/panai.user.js
 // @match             *://*/*
-// @exclude           https://www.futbin.com/*
 // @require           https://unpkg.com/sweetalert2@10.16.6/dist/sweetalert2.min.js
 // @require           https://unpkg.com/hotkeys-js/dist/hotkeys.min.js
 // @resource          swalStyle https://unpkg.com/sweetalert2@10.16.6/dist/sweetalert2.min.css
@@ -50,6 +49,7 @@
             console.log(c);
             console.groupEnd();
         },
+
         parseQuery(name) {
             let reg = new RegExp(`(?<=${name}\\=)(?:wss:[a-zA-Z0-9]+|[\\w-]+)`, "i")
             let pd = location.href.replace(/%3A/g,":").match(reg);
@@ -545,7 +545,7 @@
                     if (val.storage === 'local') {
                         //当前local存储的密码不一定是当前链接的密码，用户可能通过url直接访问或者恢复页面，这样取出来的密码可能是其他链接的
                         //如果能从url中获取到密码，则应该优先使用url中获取的密码
-                        pwd = pwd || util.getValue(val.storagePwdName);
+                        pwd = pwd || util.getValue(val.storagePwdName) || '';
                         pwd && this.doFillAction(val.input, val.button, pwd);
                     }
                     if (val.storage === 'hash') {

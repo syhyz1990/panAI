@@ -229,6 +229,14 @@
             name: '文叔叔网盘',
             storage: 'hash'
         },
+        'uc': {
+            reg: /(?:https?:\/\/)?drive\.uc\.cn\/s\/[a-zA-Z\d]+/,
+            host: /drive\.uc\.cn/,
+            input: ["input[class*='ShareReceivePC--input']",'.input-wrap input'],
+            button:["button[class*='ShareReceivePC--submit-btn'",'.input-wrap button'],
+            name: 'UC云盘',
+            storage: 'hash'
+        },
         'mega': {
             reg: /((?:https?:\/\/)?(?:mega\.nz|mega\.co\.nz)\/#F?![\w!-]+)/,
             host: /(?:mega\.nz|mega\.co\.nz)/,

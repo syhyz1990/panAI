@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name              网盘智能识别助手
 // @namespace         https://github.com/syhyz1990/panAI
-// @version           1.9.5
+// @version           1.9.6
 // @author            YouXiaoHou
 // @description       智能识别选中文字中的🔗网盘链接和🔑提取码，识别成功打开网盘链接并自动填写提取码，省去手动复制提取码在输入的烦恼。支持识别 ✅百度网盘 ✅阿里云盘 ✅腾讯微云 ✅蓝奏云 ✅天翼云盘 ✅移动云盘 ✅迅雷云盘 ✅123云盘 ✅360云盘 ✅115网盘 ✅奶牛快传 ✅城通网盘 ✅夸克网盘 ✅FlowUs息流 ✅Chrome 扩展商店 ✅Edge 扩展商店 ✅Firefox 扩展商店 ✅Windows 应用商店。
 // @license           AGPL-3.0-or-later
@@ -227,6 +227,14 @@
             input: ['.pwd-inp .ivu-input'],
             button: ['.pwd-inp .ivu-btn'],
             name: '文叔叔网盘',
+            storage: 'hash'
+        },
+        'uc': {
+            reg: /(?:https?:\/\/)?drive\.uc\.cn\/s\/[a-zA-Z\d]+/,
+            host: /drive\.uc\.cn/,
+            input: ["input[class*='ShareReceivePC--input']",'.input-wrap input'],
+            button:["button[class*='ShareReceivePC--submit-btn'",'.input-wrap button'],
+            name: 'UC云盘',
             storage: 'hash'
         },
         'mega': {

@@ -519,7 +519,7 @@
         //正则解析提取码
         parsePwd(text) {
             text = text.replace(/\u200B/g, '').replace('%3A', ":");
-            let reg = /wss:[a-zA-Z0-9]+|(?<=\s*(?:密|提取|访问|訪問|key|password|pwd|#|\?p)\s*[码碼]?\s*[：:=]?\s*)[a-zA-Z0-9]{3,8}/i;
+            let reg = /wss:[a-zA-Z0-9]+|(?<=\s*(?:密|提取|访问|訪問|key|password|pwd|#|\?p=)\s*[码碼]?\s*[：:=]?\s*)[a-zA-Z0-9]{3,8}/i;
             if (reg.test(text)) {
                 let match = text.match(reg);
                 return match[0];

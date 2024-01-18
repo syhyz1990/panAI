@@ -51,7 +51,7 @@
         },
 
         parseQuery(name) {
-            let reg = new RegExp(`(?<=${name}\\=)(?:wss:[a-zA-Z0-9]+|[\\w-]+)`, "i")
+            let reg = new RegExp(`(?<=(?:${name})\\=)(?:wss:[a-zA-Z0-9]+|[\\w-]+)`, "i")
             let pd = location.href.replace(/%3A/g,":").match(reg);
             if (pd) {
                 return pd[0];

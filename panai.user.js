@@ -410,7 +410,6 @@
         smartIdentify(event, str = '') {
             let selection = window.getSelection();
             let text = str || this.getSelectionHTML(selection);
-            text = text.replace(/(?:本帖)?隐藏的?内容[：:]?/, "");
             if (text !== this.lastText && text !== '') { //选择相同文字或空不识别
                 let start = performance.now();
                 this.lastText = text;
@@ -529,6 +528,7 @@
         //正则解析提取码
         parsePwd(text) {
             text = text.replace(/\u200B/g, '').replace('%3A', ":");
+            text = text.replace(/(?:本帖)?隐藏的?内容[：:]?/, "");
             let reg = /wss:[a-zA-Z0-9]+|(?<=\s*(?:密|提取|访问|訪問|key|password|pwd|#|\?p=)\s*[码碼]?\s*[：:=]?\s*)[a-zA-Z0-9]{3,8}/i;
             if (reg.test(text)) {
                 let match = text.match(reg);

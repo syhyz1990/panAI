@@ -1,7 +1,7 @@
 <center>
 <p align="center">
   <a href="https://www.youxiaohou.com">
-    <img width="100" src="https://www.youxiaohou.com/logo.gif" alt="网盘智能识别助手">
+    <img width="100" src="https://www.youxiaohou.com/logo.png" alt="网盘智能识别助手">
   </a>
 </p>
 
@@ -33,11 +33,7 @@
 
 ## 🎨 助手界面
 
-![](https://unpkg.com/youxiaohou/Y3a6hEjzHxqXPWG.png)
-
-## 💽 安装地址
-
-- **[安装地址（推荐）](https://www.youxiaohou.com/tool/install-panai.html)**
+![](https://pic.rmb.bdstatic.com/bjh/f3784d134bdbb6a78c5db0bb071fed298280.png)
 
 ## 📖 使用说明
 
@@ -45,15 +41,31 @@
 
 2. 若包含网盘链接和提取码，上方会出现提示，点击打开会自动打开链接并填写提取码。
 
-![](https://unpkg.com/youxiaohou/oqMDRTiIcBlYudv.png)
+![](https://pic.rmb.bdstatic.com/bjh/623aeea319185cc50289483a8614118b1805.png)
 
 ## 📖 更新日志
 
-**v1.8.0** 增加对百度企业网盘，百度网盘文档，115网盘，奶牛快传，城通网盘，夸克网盘的识别。
+**v1.9.5** 添加对 **新浪微盘/文叔叔网盘/14个小众网盘** 链接的识别 #31；修复链接中含有pwd字段时优先使用该字段作为密码 #22。感谢 [@52fisher](https://github.com/52fisher)。
 
-**v1.7.0** 增加剪切板文本识别，可在脚本菜单中选择 `识别剪切板中文字`（可以按 F1 快速打开），在弹出的窗口中粘贴需要识别的链接。
+**v1.9.1** 添加对 **Mega网盘** 链接的识别 #22 支持自定义识别快捷键 #30；修复蓝奏云识别错误 #23 错误的识别链接 #16。感谢 [@52fisher](https://github.com/52fisher)。
 
-**v1.6.0** 增加对360云盘的识别，新增对 **Chrome 扩展商店，Edge 扩展商店，Firefox 扩展商店**链接的识别，选中后自动跳转到对应可直接访问的商店链接。
+**v1.8.9** 添加对阿里云盘新域名 www.alipan.com 分享链接的支持。
+
+**v1.8.6** 增强选中文字含有超链接时的识别能力。感谢 [@taozhiyu](https://github.com/taozhiyu)。
+
+**v1.8.5** 增强对移动云盘的识别的识别能力。
+
+**v1.8.4** 提升对提取码的识别能力，能更智能的识别提取码。
+
+**v1.8.3** 添加对 **FlowUs息流** 链接的识别；**弹出提示时按下 Enter 回车键可以快速打开，按下 Esc 键可以关闭弹窗提示**。
+
+**v1.8.1** 更换更清晰的图标。新增对 **Mircosoft 应用商店**链接的识别，选中后自动跳转到对应可直接访问的镜像站点。[选中我试试看](https://apps.microsoft.com/store/detail/wechat-for-windows/9NBLGGH4SLX7)。
+
+**v1.8.0** 添加对 **百度企业网盘，百度网盘文档，115网盘，奶牛快传，城通网盘，夸克网盘** 链接的识别。
+
+**v1.7.0** 添加剪切板文本识别，可在脚本菜单中选择 `识别剪切板中文字`（可以按 F1 快速打开），在弹出的窗口中粘贴需要识别的链接。
+
+**v1.6.0** 添加对 **360云盘** 链接的识别，新增对 **Chrome 扩展商店，Edge 扩展商店，Firefox 扩展商店**链接的识别，选中后自动跳转到对应可直接访问的镜像站点。[选中我试试看](https://chrome.google.com/webstore/detail/tampermonkey/dhdgffkkebhmkfjojejmpbldmpobfkfo)。
 
 **v1.5.6** 支持将链接中含“点”自动替换为“.”后识别，加强阿里云盘的识别。
 
@@ -63,7 +75,7 @@
 
 **v1.5.1** 支持识别到 lanzous.com，就自动转换到可以访问的域名 lanzouw.com
 
-**v1.5.0** 增加对123云盘的识别，支持超链接形式的识别（[选中密码和我试试看](https://wwi.lanzous.com/b00t5sclg) 密码:d8f9）。
+**v1.5.0** 添加对 **123云盘** 链接的识别，支持超链接形式的识别（[选中密码和我试试看](https://www.lanzoui.com/b00t5sclg) 密码:d8f9）。
 
 **v1.4.3** 增强对蓝奏云新链接的识别。
 
@@ -71,13 +83,13 @@
 
 **v1.4.1** 添加对阿里云盘短链接 alywp.net 的识别，增强对蓝奏云自定义链接的识别。
 
-**v1.4.0** 添加对阿里云盘链接的识别支持，见测试链接 - 阿里云盘。
+**v1.4.0** 添加对 **阿里云盘** 链接的识别，见测试链接 - 阿里云盘。
 
-**v1.3.2** 支持识别更多天翼云链接格式。
+**v1.3.2** 支持识别更多天翼云盘链接格式。
 
 **v1.3.1** 支持识别到 lanzous.com，就自动转换到可以访问的域名 lanzoui.com
 
-**v1.3.0** 添加了对迅雷网盘的识别支持，改进了对链接中含有零宽度字符时无法识别的问题，修复和彩云无法自动填写的 Bug。
+**v1.3.0** 添加了对 **迅雷网盘** 链接的识别，改进了对链接中含有零宽度字符时无法识别的问题，修复和彩云无法自动填写的 Bug。
 
 **v1.2.0** 修复了设置选项出现在 iframe 里的情况，优化了自动点击提交按钮的逻辑。
 
@@ -91,11 +103,11 @@
 
 **v1.0.3** 增强识别准确度，对提取码判断更加准确。
 
-**v1.0.2** 增加对不带 https 的链接识别，修复部分网站设置弹出框字体过大的提示。
+**v1.0.2** 添加对不带 https 的链接识别，修复部分网站设置弹出框字体过大的提示。
 
-**v1.0.1** 增加对和彩云的识别支持。
+**v1.0.1** 添加对 **和彩云** 链接的识别。
 
-**v1.0.0** 增加对百度网盘，腾讯微云，蓝奏云，天翼云的识别支持。
+**v1.0.0** 添加对 **百度网盘，腾讯微云，蓝奏云，天翼云盘** 链接的识别。
 
 ## 🎨 GIF演示
 
@@ -104,23 +116,23 @@
 |  |  |
 |:-------------------------------------------------:|:-----------------------------------------------:|
 | **百度网盘** | **阿里云盘** |
-| ![](https://vkceyugu.cdn.bspapp.com/VKCEYUGU-0d8c17ea-3b18-45d5-bf2f-64e5c812dfc9/5149e922-1ddd-42cf-8a6a-d0b3a0b3cf8c.gif) | ![](https://vkceyugu.cdn.bspapp.com/VKCEYUGU-0d8c17ea-3b18-45d5-bf2f-64e5c812dfc9/4e181539-8b31-4a1e-b6c2-a957fa2d3f53.gif) |
+| ![](https://pic.rmb.bdstatic.com/bjh/0e378c9fe87dab58b3b4b5a1a6c14f1c1596.gif) | ![](https://pic.rmb.bdstatic.com/bjh/26feaeebd345fb9d81977615a293bd5a7602.gif) |
 | **蓝奏云** | **腾讯微云** |
-| ![](https://vkceyugu.cdn.bspapp.com/VKCEYUGU-0d8c17ea-3b18-45d5-bf2f-64e5c812dfc9/21af97f5-4ff3-4d9d-a9e2-ce7235bb3ffa.gif) | ![](https://vkceyugu.cdn.bspapp.com/VKCEYUGU-0d8c17ea-3b18-45d5-bf2f-64e5c812dfc9/7300a7a0-1782-4b8a-b3c6-bad77751bcda.gif) |
+| ![](https://pic.rmb.bdstatic.com/bjh/642cd5072e3206d1788689e47709edab325.gif) | ![](https://pic.rmb.bdstatic.com/bjh/3e91200930793e97ceadb95d7abec1ee6398.gif) |
 | **天翼云** | **和彩云** |
-| ![](https://vkceyugu.cdn.bspapp.com/VKCEYUGU-0d8c17ea-3b18-45d5-bf2f-64e5c812dfc9/5a6fc1e9-567f-47e9-afb4-c821d4eb9bca.gif) | ![](https://vkceyugu.cdn.bspapp.com/VKCEYUGU-0d8c17ea-3b18-45d5-bf2f-64e5c812dfc9/f7d3b198-8fe0-47da-aa6d-c4e607732a97.gif) |
+| ![](https://pic.rmb.bdstatic.com/bjh/999f0aad15106f346dc5a7dcd0e0f9c67773.gif) | ![](https://pic.rmb.bdstatic.com/bjh/0b2d96e8bc38c5b00c24d29709e5cfa52649.gif) |
 | **迅雷网盘** | **123云盘** |
-| ![](https://vkceyugu.cdn.bspapp.com/VKCEYUGU-0d8c17ea-3b18-45d5-bf2f-64e5c812dfc9/6217d370-dab2-4118-b8a7-d0efd1dbe3f8.gif) | ![](https://vkceyugu.cdn.bspapp.com/VKCEYUGU-0d8c17ea-3b18-45d5-bf2f-64e5c812dfc9/cb72f99f-d443-45c6-865f-eaf9ae22dd63.gif) |
+| ![](https://pic.rmb.bdstatic.com/bjh/93c837648bbe18e0da56c161cb2b24773089.gif) | ![](https://pic.rmb.bdstatic.com/bjh/093f6b9c739b25cbe7c0967d45e732fa907.gif) |
 | **115网盘** | **奶牛快传** |
-| ![](https://vkceyugu.cdn.bspapp.com/VKCEYUGU-0d8c17ea-3b18-45d5-bf2f-64e5c812dfc9/0c861d55-9612-4081-a222-f0aa89172285.gif) | ![](https://vkceyugu.cdn.bspapp.com/VKCEYUGU-0d8c17ea-3b18-45d5-bf2f-64e5c812dfc9/6c4770f9-8ec9-4a56-8c03-552aadbb823e.gif) |
+| ![](https://pic.rmb.bdstatic.com/bjh/181f1ee654d0bc387b088267a75aebba6628.gif) | ![](https://pic.rmb.bdstatic.com/bjh/8289e20763b97b26a932774e424915bc6814.gif) |
 | **城通网盘** | **夸克网盘** |
-| ![](https://vkceyugu.cdn.bspapp.com/VKCEYUGU-0d8c17ea-3b18-45d5-bf2f-64e5c812dfc9/1f91087a-1172-426c-8e6e-175a3c0ead25.gif) | ![](https://vkceyugu.cdn.bspapp.com/VKCEYUGU-0d8c17ea-3b18-45d5-bf2f-64e5c812dfc9/8f68d2f8-fe45-4edb-af83-a5a79f756d8d.gif) |
+| ![](https://pic.rmb.bdstatic.com/bjh/0e9bad688f2c21f0b6f3559b39b79f691712.gif) | ![](https://pic.rmb.bdstatic.com/bjh/941da48f310b86b43dcd03d884918fe13568.gif) |
 
 ## 🔧 助手配置
 
 可以点击 `油猴` 图标打开配置选项，可配置选项如下图：
 
-![](https://unpkg.com/youxiaohou/PVSUZyWoubFtQDx.png)
+![](https://pic.rmb.bdstatic.com/bjh/5e712642ac0c0e7bbdeed5406777a9b79281.png)
 
 技巧一：如何识别后实现自动打开链接？
 
@@ -160,8 +172,4 @@ A：根据多次测试，平均识别时间仅需：0.1 毫秒-1 毫秒，基本
 
 ## 👻 BUG反馈
 
-如果您在使用过程中有无法识别的文本，请 [点击这里](https://github.com/syhyz1990/panAI/issues) 或 [发送邮件](mailto:mail@youxiaohou.com) 进行反馈。
-
-## 💻 更多黑科技
-
-![](https://unpkg.com/youxiaohou/cmqN5niG6ER9oZ2.png)
+如果您在使用过程中有无法识别的文本，请 [点击这里](https://github.com/syhyz1990/panAI/issues) 进行反馈。

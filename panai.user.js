@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name              网盘智能识别助手
 // @namespace         https://github.com/syhyz1990/panAI
-// @version           1.9.9
+// @version           2.0.0
 // @author            YouXiaoHou,52fisher
 // @description       智能识别选中文字中的🔗网盘链接和🔑提取码，识别成功打开网盘链接并自动填写提取码，省去手动复制提取码在输入的烦恼。支持识别 ✅百度网盘 ✅阿里云盘 ✅腾讯微云 ✅蓝奏云 ✅天翼云盘 ✅移动云盘 ✅迅雷云盘 ✅123云盘 ✅360云盘 ✅115网盘 ✅奶牛快传 ✅城通网盘 ✅夸克网盘 ✅FlowUs息流 ✅Chrome 扩展商店 ✅Edge 扩展商店 ✅Firefox 扩展商店 ✅Windows 应用商店。
 // @license           AGPL-3.0-or-later
@@ -197,7 +197,7 @@
             storage: 'hash'
         },
         'ctfile': {
-            reg: /((?:https?:\/\/)?(?:[a-zA-Z\d-.]+)?(?:ctfile|545c|u062)\.com\/\w+\/[a-zA-Z\d-]+)/,
+            reg: /((?:https?:\/\/)?(?:[a-zA-Z\d-.]+)?(?:ctfile|545c|u062|ghpym)\.com\/\w+\/[a-zA-Z\d-]+)/,
             host: /(?:[a-zA-Z\d-.]+)?(?:ctfile|545c|u062)\.com/,
             input: ['#passcode'],
             button: ['.card-body button'],
@@ -237,6 +237,14 @@
             name: 'UC云盘',
             storage: 'hash'
         },
+        'jianguoyun': {
+            reg: /((?:https?:\/\/)?www\.jianguoyun\.com\/p\/[\w-]+)/,
+            host: /www\.jianguoyun\.com/,
+            input: ['input[type=password]'],
+            button: ['.ok-button','.confirm-button'],
+            name: '坚果云',
+            storage: 'hash'
+        },
         'mega': {
             reg: /((?:https?:\/\/)?(?:mega\.nz|mega\.co\.nz)\/#F?![\w!-]+)/,
             host: /(?:mega\.nz|mega\.co\.nz)/,
@@ -251,9 +259,10 @@
             name: '520云盘',
         },
         '567pan': {
-          reg: /((?:https?:\/\/)?www\.567(?:pan|yun|file)\.(?:com|cn)\/file-\d+\.html)/,
-          host: /www\.567pan\.cn/,
+          reg: /((?:https?:\/\/)?www\.567(?:pan|yun|file|inc)\.(?:com|cn)\/file-\d+\.html)/,
+          host: /www\.567inc\.cn/,
           name: '567盘',
+          replaceHost: "www.567inc.com",
         },
         'ayunpan': {
           reg: /((?:https?:\/\/)?www\.ayunpan\.com\/file-\d+\.html)/,
@@ -519,6 +528,7 @@
         //正则解析提取码
         parsePwd(text) {
             text = text.replace(/\u200B/g, '').replace('%3A', ":");
+            text = text.replace(/(?:本帖)?隐藏的?内容[：:]?/, "");
             let reg = /wss:[a-zA-Z0-9]+|(?<=\s*(?:密|提取|访问|訪問|key|password|pwd|#|\?p=)\s*[码碼]?\s*[：:=]?\s*)[a-zA-Z0-9]{3,8}/i;
             if (reg.test(text)) {
                 let match = text.match(reg);

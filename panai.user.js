@@ -561,7 +561,7 @@
         //自动填写密码
         autoFillPassword() {
             let query = util.parseQuery('pwd|p');
-            let hash = location.hash.slice(1);
+            let hash = location.hash.slice(1).replace(/\W/g,"") //hash中可能存在密码，需要过滤掉非密码字符
             let pwd = query || hash;
             let panType = this.panDetect();
             for (let name in opt) {

@@ -118,7 +118,7 @@
         'aliyun': {
             reg: /((?:https?:\/\/)?(?:(?:www\.)?(?:aliyundrive|alipan)\.com\/s|alywp\.net)\/[a-zA-Z\d]+)/,
             host: /www\.(aliyundrive|alipan)\.com|alywp\.net/,
-            input: ['form .ant-input', 'form input[type="text"]','input[name="pwd"]'],
+            input: ['form .ant-input', 'form input[type="text"]', 'input[name="pwd"]'],
             button: ['form .button--fep7l', 'form button[type="submit"]'],
             name: '阿里云盘',
             storage: 'hash'
@@ -126,8 +126,8 @@
         'weiyun': {
             reg: /((?:https?:\/\/)?share\.weiyun\.com\/[a-zA-Z\d]+)/,
             host: /share\.weiyun\.com/,
-            input: ['.mod-card-s input[type=password]','input.pw-input'],
-            button: ['.mod-card-s .btn-main',".pw-btn-wrap button.btn"],
+            input: ['.mod-card-s input[type=password]', 'input.pw-input'],
+            button: ['.mod-card-s .btn-main', ".pw-btn-wrap button.btn"],
             name: '微云',
             storage: 'hash'
         },
@@ -142,8 +142,8 @@
         'tianyi': {
             reg: /((?:https?:\/\/)?cloud\.189\.cn\/(?:t\/|web\/share\?code=)?[a-zA-Z\d]+)/,
             host: /cloud\.189\.cn/,
-            input: ['.access-code-item #code_txt',"input.access-code-input"],
-            button: ['.access-code-item .visit',".button"],
+            input: ['.access-code-item #code_txt', "input.access-code-input"],
+            button: ['.access-code-item .visit', ".button"],
             name: '天翼云盘',
             storage: (() => util.isMobile === true ? 'local' : 'hash')(),
             storagePwdName: 'tmp_tianyi_pwd'
@@ -168,8 +168,8 @@
         '123pan': {
             reg: /((?:https?:\/\/)?www\.123pan\.com\/s\/[\w-]{6,})/,
             host: /www\.123pan\.com/,
-            input: ['.ca-fot input',".appinput .appinput"],
-            button: ['.ca-fot button',".appinput button"],
+            input: ['.ca-fot input', ".appinput .appinput"],
+            button: ['.ca-fot button', ".appinput button"],
             name: '123云盘',
             storage: 'hash'
         },
@@ -218,8 +218,8 @@
         'vdisk': {
             reg: /(?:https?:\/\/)?vdisk.weibo.com\/lc\/\w+/,
             host: /vdisk\.weibo\.com/,
-            input: ['#keypass',"#access_code"],
-            button: ['.search_btn_wrap a',"#linkcommon_btn"],
+            input: ['#keypass', "#access_code"],
+            button: ['.search_btn_wrap a', "#linkcommon_btn"],
             name: '微盘',
             storage: 'hash',
         },
@@ -234,8 +234,8 @@
         'uc': {
             reg: /(?:https?:\/\/)?drive\.uc\.cn\/s\/[a-zA-Z\d]+/,
             host: /drive\.uc\.cn/,
-            input: ["input[class*='ShareReceivePC--input']",'.input-wrap input'],
-            button:["button[class*='ShareReceivePC--submit-btn'",'.input-wrap button'],
+            input: ["input[class*='ShareReceivePC--input']", '.input-wrap input'],
+            button: ["button[class*='ShareReceivePC--submit-btn'", '.input-wrap button'],
             name: 'UC云盘',
             storage: 'hash'
         },
@@ -243,9 +243,17 @@
             reg: /((?:https?:\/\/)?www\.jianguoyun\.com\/p\/[\w-]+)/,
             host: /www\.jianguoyun\.com/,
             input: ['input[type=password]'],
-            button: ['.ok-button','.confirm-button'],
+            button: ['.ok-button', '.confirm-button'],
             name: '坚果云',
             storage: 'hash'
+        },
+        'wo': {
+            reg: /(?:https?:\/\/)?pan\.wo\.cn\/s\/[\w_]+/,
+            host: /(pan\.wo\.cn|panservice\.mail\.wo\.cn)/,
+            input: ['input.el-input__inner',".van-field__control"],
+            button: ['.s-button',".share-code button"],
+            name: '联通云盘',
+            storage: 'local'
         },
         'mega': {
             reg: /((?:https?:\/\/)?(?:mega\.nz|mega\.co\.nz)\/#F?![\w!-]+)/,
@@ -552,7 +560,9 @@
 
         //自动填写密码
         autoFillPassword() {
-            let pwd = util.parseQuery('pwd|p');
+            let query = util.parseQuery('pwd|p');
+            let hash = location.hash.slice(1);
+            let pwd = query || hash;
             let panType = this.panDetect();
             for (let name in opt) {
                 let val = opt[name];
@@ -561,7 +571,7 @@
                         //当前local存储的密码不一定是当前链接的密码，用户可能通过url直接访问或者恢复页面，这样取出来的密码可能是其他链接的
                         //如果能从url中获取到密码，则应该优先使用url中获取的密码
                         //util.getValue查询不到key时，默认返回undefined，已经形成逻辑短路，此处赋空值无效也无需赋空值.详见https://github.com/syhyz1990/panAI/commit/efb6ff0c77972920b26617bb836a2e19dd14a749
-                        pwd = pwd || util.getValue(val.storagePwdName);
+                        pwd = query || util.getValue(val.storagePwdName) || hash;
                         pwd && this.doFillAction(val.input, val.button, pwd);
                     }
                     if (val.storage === 'hash') {

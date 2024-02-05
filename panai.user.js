@@ -571,7 +571,7 @@
                         //当前local存储的密码不一定是当前链接的密码，用户可能通过url直接访问或者恢复页面，这样取出来的密码可能是其他链接的
                         //如果能从url中获取到密码，则应该优先使用url中获取的密码
                         //util.getValue查询不到key时，默认返回undefined，已经形成逻辑短路，此处赋空值无效也无需赋空值.详见https://github.com/syhyz1990/panAI/commit/efb6ff0c77972920b26617bb836a2e19dd14a749
-                        pwd = pwd || util.getValue(val.storagePwdName);
+                        pwd = query || util.getValue(val.storagePwdName) || hash;
                         pwd && this.doFillAction(val.input, val.button, pwd);
                     }
                     if (val.storage === 'hash') {

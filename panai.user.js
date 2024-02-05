@@ -253,7 +253,8 @@
             input: ['input.el-input__inner',".van-field__control"],
             button: ['.s-button',".share-code button"],
             name: '联通云盘',
-            storage: 'local'
+            storage: (()=>util.isMobile === true ? 'local' : 'hash')(),
+            storagePwdName: 'tmp_wo_pwd'
         },
         'mega': {
             reg: /((?:https?:\/\/)?(?:mega\.nz|mega\.co\.nz)\/#F?![\w!-]+)/,

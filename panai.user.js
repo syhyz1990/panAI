@@ -553,8 +553,6 @@
         //自动填写密码
         autoFillPassword() {
             let pwd = util.parseQuery('pwd|p');
-            // let hash = location.hash.slice(1);
-            // let pwd = query || hash;
             let panType = this.panDetect();
             for (let name in opt) {
                 let val = opt[name];
@@ -582,7 +580,6 @@
                 maxTime--;
                 let input = util.query(inputSelector);
                 let button = util.query(buttonSelector);
-                
                 if (input && !util.isHidden(input)) {
                     clearInterval(ins);
                     Swal.fire({

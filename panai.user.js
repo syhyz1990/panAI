@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name              网盘智能识别助手
 // @namespace         https://github.com/syhyz1990/panAI
-// @version           2.0.0
+// @version           2.0.1
 // @author            YouXiaoHou,52fisher
 // @description       智能识别选中文字中的🔗网盘链接和🔑提取码，识别成功打开网盘链接并自动填写提取码，省去手动复制提取码在输入的烦恼。支持识别 ✅百度网盘 ✅阿里云盘 ✅腾讯微云 ✅蓝奏云 ✅天翼云盘 ✅移动云盘 ✅迅雷云盘 ✅123云盘 ✅360云盘 ✅115网盘 ✅奶牛快传 ✅城通网盘 ✅夸克网盘 ✅FlowUs息流 ✅Chrome 扩展商店 ✅Edge 扩展商店 ✅Firefox 扩展商店 ✅Windows 应用商店。
 // @license           AGPL-3.0-or-later
@@ -89,7 +89,7 @@
                 return false;
             }
         },
-
+        isMobile:(()=>!!navigator.userAgent.match(/(phone|pad|pod|iPhone|iPod|ios|iPad|Android|Mobile|BlackBerry|IEMobile|MQQBrowser|JUC|Fennec|wOSBrowser|BrowserNG|WebOS|Symbian|Windows Phone|HarmonyOS|MicroMessenger)/i))(),
         query(selector) {
             if (Array.isArray(selector)) {
                 let obj = null;
@@ -118,7 +118,7 @@
         'aliyun': {
             reg: /((?:https?:\/\/)?(?:(?:www\.)?(?:aliyundrive|alipan)\.com\/s|alywp\.net)\/[a-zA-Z\d]+)/,
             host: /www\.(aliyundrive|alipan)\.com|alywp\.net/,
-            input: ['form .ant-input', 'form input[type="text"]'],
+            input: ['form .ant-input', 'form input[type="text"]', 'input[name="pwd"]'],
             button: ['form .button--fep7l', 'form button[type="submit"]'],
             name: '阿里云盘',
             storage: 'hash'
@@ -126,8 +126,8 @@
         'weiyun': {
             reg: /((?:https?:\/\/)?share\.weiyun\.com\/[a-zA-Z\d]+)/,
             host: /share\.weiyun\.com/,
-            input: ['.mod-card-s input[type=password]'],
-            button: ['.mod-card-s .btn-main'],
+            input: ['.mod-card-s input[type=password]', 'input.pw-input'],
+            button: ['.mod-card-s .btn-main', ".pw-btn-wrap button.btn"],
             name: '微云',
             storage: 'hash'
         },
@@ -142,14 +142,15 @@
         'tianyi': {
             reg: /((?:https?:\/\/)?cloud\.189\.cn\/(?:t\/|web\/share\?code=)?[a-zA-Z\d]+)/,
             host: /cloud\.189\.cn/,
-            input: ['.access-code-item #code_txt'],
-            button: ['.access-code-item .visit'],
+            input: ['.access-code-item #code_txt', "input.access-code-input"],
+            button: ['.access-code-item .visit', ".button"],
             name: '天翼云盘',
-            storage: 'hash'
+            storage: (() => util.isMobile === true ? 'local' : 'hash')(),
+            storagePwdName: 'tmp_tianyi_pwd'
         },
         'caiyun': {
             reg: /((?:https?:\/\/)?caiyun\.139\.com\/(?:m\/i|w\/i\/|web\/|front\/#\/detail)\??(?:linkID=)?[a-zA-Z\d]+)/,
-            host: /caiyun\.139\.com/,
+            host: /(?:cai)?yun\.139\.com/,
             input: ['.token-form input[type=text]'],
             button: ['.token-form .btn-token'],
             name: '移动云盘',
@@ -167,18 +168,19 @@
         '123pan': {
             reg: /((?:https?:\/\/)?www\.123pan\.com\/s\/[\w-]{6,})/,
             host: /www\.123pan\.com/,
-            input: ['.ca-fot input'],
-            button: ['.ca-fot button'],
+            input: ['.ca-fot input', ".appinput .appinput"],
+            button: ['.ca-fot button', ".appinput button"],
             name: '123云盘',
             storage: 'hash'
         },
         '360': {
-            reg: /((?:https?:\/\/)?(?:[a-zA-Z\d\-.]+)?yunpan\.360\.cn(\/lk)?\/surl_\w{6,})/,
-            host: /yunpan\.360\.cn/,
+            reg: /((?:https?:\/\/)?(?:[a-zA-Z\d\-.]+)?(?:yunpan\.360\.cn|yunpan\.com)(\/lk)?\/surl_\w{6,})/,
+            host: /[\w.]+?yunpan\.com/,
             input: ['.pwd-input'],
             button: ['.submit-btn'],
             name: '360云盘',
-            storage: 'hash'
+            storage: 'local',
+            storagePwdName: 'tmp_360_pwd'
         },
         '115': {
             reg: /((?:https?:\/\/)?115\.com\/s\/[a-zA-Z\d]+)/,
@@ -216,8 +218,8 @@
         'vdisk': {
             reg: /(?:https?:\/\/)?vdisk.weibo.com\/lc\/\w+/,
             host: /vdisk\.weibo\.com/,
-            input: ['#keypass'],
-            button: ['.search_btn_wrap a'],
+            input: ['#keypass', "#access_code"],
+            button: ['.search_btn_wrap a', "#linkcommon_btn"],
             name: '微盘',
             storage: 'hash',
         },
@@ -232,8 +234,8 @@
         'uc': {
             reg: /(?:https?:\/\/)?drive\.uc\.cn\/s\/[a-zA-Z\d]+/,
             host: /drive\.uc\.cn/,
-            input: ["input[class*='ShareReceivePC--input']",'.input-wrap input'],
-            button:["button[class*='ShareReceivePC--submit-btn'",'.input-wrap button'],
+            input: ["input[class*='ShareReceivePC--input']", '.input-wrap input'],
+            button: ["button[class*='ShareReceivePC--submit-btn'", '.input-wrap button'],
             name: 'UC云盘',
             storage: 'hash'
         },
@@ -241,9 +243,18 @@
             reg: /((?:https?:\/\/)?www\.jianguoyun\.com\/p\/[\w-]+)/,
             host: /www\.jianguoyun\.com/,
             input: ['input[type=password]'],
-            button: ['.ok-button','.confirm-button'],
+            button: ['.ok-button', '.confirm-button'],
             name: '坚果云',
             storage: 'hash'
+        },
+        'wo': {
+            reg: /(?:https?:\/\/)?pan\.wo\.cn\/s\/[\w_]+/,
+            host: /(pan\.wo\.cn|panservice\.mail\.wo\.cn)/,
+            input: ['input.el-input__inner',".van-field__control"],
+            button: ['.s-button',".share-code button"],
+            name: '联通云盘',
+            storage: (()=>util.isMobile === true ? 'local' : 'hash')(),
+            storagePwdName: 'tmp_wo_pwd'
         },
         'mega': {
             reg: /((?:https?:\/\/)?(?:mega\.nz|mega\.co\.nz)\/#F?![\w!-]+)/,
@@ -450,11 +461,8 @@
                         this.lastText = 'lorem&';
                         selection.empty();
                         if (res.isConfirmed || res.dismiss === 'timer') {
-                            if (name === '移动云盘') {  //移动云盘无法携带参数和Hash
-                                util.setValue('tmp_caiyun_pwd', pwd);
-                            }
-                            if (name === '夸克网盘') {
-                                util.setValue('tmp_quark_pwd', pwd);
+                            if (linkObj.storage == "local") {
+                                util.setValue(linkObj.storagePwdName, pwd);
                             }
                             let active = util.getValue('setting_active_in_front');
                             if (pwd) {
@@ -494,7 +502,7 @@
 
         //正则解析网盘链接
         parseLink(text = '') {
-            let obj = {name: '', link: ''};
+            let obj = {name: '', link: '',storage:'',storagePwdName:''};
             if (text) {
                 try {
                     text = decodeURIComponent(text);
@@ -509,6 +517,8 @@
                         let matches = text.match(val.reg);
                         obj.name = val.name;
                         obj.link = matches[0];
+                        obj.storage = val.storage;
+                        obj.storagePwdName = val.storagePwdName||null;
                         if (val.replaceHost) {
                             obj.link = obj.link.replace(val.host, val.replaceHost);
                         }
@@ -552,7 +562,7 @@
         //自动填写密码
         autoFillPassword() {
             let query = util.parseQuery('pwd|p');
-            let hash = location.hash.slice(1);
+            let hash = location.hash.slice(1).replace(/\W/g,"") //hash中可能存在密码，需要过滤掉非密码字符
             let pwd = query || hash;
             let panType = this.panDetect();
             for (let name in opt) {
@@ -581,7 +591,6 @@
                 maxTime--;
                 let input = util.query(inputSelector);
                 let button = util.query(buttonSelector);
-
                 if (input && !util.isHidden(input)) {
                     clearInterval(ins);
                     Swal.fire({

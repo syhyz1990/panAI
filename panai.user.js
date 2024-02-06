@@ -52,7 +52,7 @@
 
         parseQuery(name) {
             let reg = new RegExp(`(?<=(?:${name})\\=)(?:wss:[a-zA-Z0-9]+|[\\w-]+)`, "i")
-            let pd = location.href.replace(/%3A/g,":").match(reg);
+            let pd = location.href.replace(/%3A/g, ":").match(reg);
             if (pd) {
                 return pd[0];
             }
@@ -89,7 +89,9 @@
                 return false;
             }
         },
-        isMobile:(()=>!!navigator.userAgent.match(/(phone|pad|pod|iPhone|iPod|ios|iPad|Android|Mobile|BlackBerry|IEMobile|MQQBrowser|JUC|Fennec|wOSBrowser|BrowserNG|WebOS|Symbian|Windows Phone|HarmonyOS|MicroMessenger)/i))(),
+
+        isMobile: (() => !!navigator.userAgent.match(/(phone|pad|pod|iPhone|iPod|ios|iPad|Android|Mobile|BlackBerry|IEMobile|MQQBrowser|JUC|Fennec|wOSBrowser|BrowserNG|WebOS|Symbian|Windows Phone|HarmonyOS|MicroMessenger)/i))(),
+
         query(selector) {
             if (Array.isArray(selector)) {
                 let obj = null;
@@ -250,10 +252,10 @@
         'wo': {
             reg: /(?:https?:\/\/)?pan\.wo\.cn\/s\/[\w_]+/,
             host: /(pan\.wo\.cn|panservice\.mail\.wo\.cn)/,
-            input: ['input.el-input__inner',".van-field__control"],
-            button: ['.s-button',".share-code button"],
+            input: ['input.el-input__inner', ".van-field__control"],
+            button: ['.s-button', ".share-code button"],
             name: '联通云盘',
-            storage: (()=>util.isMobile === true ? 'local' : 'hash')(),
+            storage: (() => util.isMobile === true ? 'local' : 'hash')(),
             storagePwdName: 'tmp_wo_pwd'
         },
         'mega': {
@@ -270,25 +272,25 @@
             name: '520云盘',
         },
         '567pan': {
-          reg: /((?:https?:\/\/)?www\.567(?:pan|yun|file|inc)\.(?:com|cn)\/file-\d+\.html)/,
-          host: /www\.567inc\.cn/,
-          name: '567盘',
-          replaceHost: "www.567inc.com",
+            reg: /((?:https?:\/\/)?www\.567(?:pan|yun|file|inc)\.(?:com|cn)\/file-\d+\.html)/,
+            host: /www\.567inc\.cn/,
+            name: '567盘',
+            replaceHost: "www.567inc.com",
         },
         'ayunpan': {
-          reg: /((?:https?:\/\/)?www\.ayunpan\.com\/file-\d+\.html)/,
-          host: /www\.ayunpan\.com/,
-          name: 'AYunPan',
+            reg: /((?:https?:\/\/)?www\.ayunpan\.com\/file-\d+\.html)/,
+            host: /www\.ayunpan\.com/,
+            name: 'AYunPan',
         },
         'iycdn.com': {
-          reg: /((?:https?:\/\/)?www\.iycdn\.com\/file-\d+\.html)/,
-          host: /www\.iycdn\.com/,
-          name: '爱优网盘',
+            reg: /((?:https?:\/\/)?www\.iycdn\.com\/file-\d+\.html)/,
+            host: /www\.iycdn\.com/,
+            name: '爱优网盘',
         },
         'feimaoyun': {
-          reg: /((?:https?:\/\/)?www\.feimaoyun\.com\/s\/[0-9a-zA-Z]+)/,
-          host: /www\.feimaoyun\.com/,
-          name: '飞猫盘',
+            reg: /((?:https?:\/\/)?www\.feimaoyun\.com\/s\/[0-9a-zA-Z]+)/,
+            host: /www\.feimaoyun\.com/,
+            name: '飞猫盘',
         },
         'uyunp.com': {
             reg: /((?:https?:\/\/)?download\.uyunp\.com\/share\/s\/short\/\?surl=[0-9a-zA-Z]+)/,
@@ -502,7 +504,7 @@
 
         //正则解析网盘链接
         parseLink(text = '') {
-            let obj = {name: '', link: '',storage:'',storagePwdName:''};
+            let obj = {name: '', link: '', storage: '', storagePwdName: ''};
             if (text) {
                 try {
                     text = decodeURIComponent(text);
@@ -518,7 +520,7 @@
                         obj.name = val.name;
                         obj.link = matches[0];
                         obj.storage = val.storage;
-                        obj.storagePwdName = val.storagePwdName||null;
+                        obj.storagePwdName = val.storagePwdName || null;
                         if (val.replaceHost) {
                             obj.link = obj.link.replace(val.host, val.replaceHost);
                         }
@@ -562,7 +564,7 @@
         //自动填写密码
         autoFillPassword() {
             let query = util.parseQuery('pwd|p');
-            let hash = location.hash.slice(1).replace(/\W/g,"") //hash中可能存在密码，需要过滤掉非密码字符
+            let hash = location.hash.slice(1).replace(/\W/g, "") //hash中可能存在密码，需要过滤掉非密码字符
             let pwd = query || hash;
             let panType = this.panDetect();
             for (let name in opt) {
@@ -648,7 +650,7 @@
                 title: '识别剪切板中文字',
                 input: 'textarea',
                 inputPlaceholder: '若选方式一，请按 Ctrl+V 粘贴要识别的文字',
-                html: `<div style="font-size: 12px;color: #999;margin-bottom: 8px;text-align: center;">提示：在任意网页按下 <span style="font-weight: 700;">${ util.getValue("setting_hotkeys") }</span> 键可快速打开本窗口。</div><div style="font-size: 14px;line-height: 22px;padding: 10px 0 5px;text-align: left;"><div style="font-size: 16px;margin-bottom: 8px;font-weight: 700;">支持以下两种方式：</div><div><b>方式一：</b>直接粘贴文字到输入框，点击“识别方框内容”按钮。</div><div><b>方式二：</b>点击“读取剪切板”按钮。<span style="color: #d14529;font-size: 12px;">会弹出“授予网站读取剪切板”权限，同意后会自动识别剪切板中的文字。</span></div></div>`,
+                html: `<div style="font-size: 12px;color: #999;margin-bottom: 8px;text-align: center;">提示：在任意网页按下 <span style="font-weight: 700;">${util.getValue("setting_hotkeys")}</span> 键可快速打开本窗口。</div><div style="font-size: 14px;line-height: 22px;padding: 10px 0 5px;text-align: left;"><div style="font-size: 16px;margin-bottom: 8px;font-weight: 700;">支持以下两种方式：</div><div><b>方式一：</b>直接粘贴文字到输入框，点击“识别方框内容”按钮。</div><div><b>方式二：</b>点击“读取剪切板”按钮。<span style="color: #d14529;font-size: 12px;">会弹出“授予网站读取剪切板”权限，同意后会自动识别剪切板中的文字。</span></div></div>`,
                 showCloseButton: false,
                 showDenyButton: true,
                 confirmButtonText: '识别方框内容',
@@ -714,7 +716,7 @@
             GM_registerMenuCommand('👀 已识别：' + util.getValue('setting_success_times') + '次', () => {
                 this.clearIdentifyTimes();
             });
-            GM_registerMenuCommand(`📋️ 识别剪切板中文字（快捷键 ${ util.getValue('setting_hotkeys') }）`, () => {
+            GM_registerMenuCommand(`📋️ 识别剪切板中文字（快捷键 ${util.getValue('setting_hotkeys')}）`, () => {
                 this.showIdentifyBox();
             });
             GM_registerMenuCommand('⚙️ 设置', () => {

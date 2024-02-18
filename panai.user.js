@@ -273,7 +273,7 @@
         },
         '567pan': {
             reg: /((?:https?:\/\/)?www\.567(?:pan|yun|file|inc)\.(?:com|cn)\/file-\d+\.html)/,
-            host: /www\.567inc\.cn/,
+            host: /www\.567(?:pan|yun|file|inc)\.(?:com|cn)/,
             name: '567盘',
             replaceHost: "www.567inc.com",
         },

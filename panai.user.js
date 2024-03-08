@@ -288,7 +288,7 @@
             name: '爱优网盘',
         },
         'feimaoyun': {
-            reg: /((?:https?:\/\/)?www\.feimaoyun\.com\/s\/[0-9a-zA-Z]+)/,
+            reg: /((?:https?:\/\/)?(?:www\.feimaoyun\.com|jmj.cc)\/s\/[0-9a-zA-Z]+)/,
             host: /www\.feimaoyun\.com/,
             name: '飞猫盘',
         },

@@ -327,6 +327,11 @@
             host: /www\.feiyunfile\.com/,
             name: '飞云网盘',
         },
+        'google': {
+            reg: /(?:https?:\/\/)?drive\.google\.com\/file\/d\/\w+/,
+            host: /drive\.google\.com/,
+            name: 'Google云端硬盘',
+        },
         'yifile': {
             reg: /(?:https?:\/\/)?www\.yifile\.com\/f\/\w+/,
             host: /www\.yifile\.com/,

@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name              网盘智能识别助手
 // @namespace         https://github.com/syhyz1990/panAI
-// @version           2.0.3
+// @version           2.0.2
 // @author            YouXiaoHou,52fisher
 // @description       智能识别选中文字中的🔗网盘链接和🔑提取码，识别成功打开网盘链接并自动填写提取码，省去手动复制提取码在输入的烦恼。支持识别 ✅百度网盘 ✅阿里云盘 ✅腾讯微云 ✅蓝奏云 ✅天翼云盘 ✅移动云盘 ✅迅雷云盘 ✅123云盘 ✅360云盘 ✅115网盘 ✅奶牛快传 ✅城通网盘 ✅夸克网盘 ✅FlowUs息流 ✅Chrome 扩展商店 ✅Edge 扩展商店 ✅Firefox 扩展商店 ✅Windows 应用商店。
 // @license           AGPL-3.0-or-later
@@ -10,9 +10,9 @@
 // @updateURL         https://www.youxiaohou.com/panai.user.js
 // @downloadURL       https://www.youxiaohou.com/panai.user.js
 // @match             *://*/*
-// @require           https://registry.npmmirror.com/sweetalert2/10.16.6/files/dist/sweetalert2.min.js
-// @require           https://registry.npmmirror.com/hotkeys-js/3.13.3/files/dist/hotkeys.min.js
-// @resource          swalStyle https://registry.npmmirror.com/sweetalert2/10.16.6/files/dist/sweetalert2.min.css
+// @require           https://unpkg.com/sweetalert2@10.16.6/dist/sweetalert2.min.js
+// @require           https://unpkg.com/hotkeys-js@3.13.3/dist/hotkeys.min.js
+// @resource          swalStyle https://unpkg.com/sweetalert2@10.16.6/dist/sweetalert2.min.css
 // @run-at            document-idle
 // @grant             GM_openInTab
 // @grant             GM_setValue
@@ -134,7 +134,7 @@
             storage: 'hash'
         },
         'lanzou': {
-            reg: /((?:https?:\/\/)?(?:[a-zA-Z0-9\-.]+)?(?:lanzou[a-z]|lanz[vn]|lanp[wv])\.com\/[a-zA-Z\d_\-]+(?:\/[\w-]+)?)/,
+            reg: /((?:https?:\/\/)?(?:[a-zA-Z0-9\-.]+)?(?:lanzou[a-z]|lanzn)\.com\/[a-zA-Z\d_\-]+(?:\/[\w-]+)?)/,
             host: /(?:[a-zA-Z\d-.]+)?(?:lanzou[a-z]|lanzn)\.com/,
             input: ['#pwd'],
             button: ['.passwddiv-btn', '#sub'],
@@ -273,7 +273,7 @@
         },
         '567pan': {
             reg: /((?:https?:\/\/)?www\.567(?:pan|yun|file|inc)\.(?:com|cn)\/file-\d+\.html)/,
-            host: /www\.567(?:pan|yun|file|inc)\.(?:com|cn)/,
+            host: /www\.567inc\.cn/,
             name: '567盘',
             replaceHost: "www.567inc.com",
         },
@@ -288,7 +288,7 @@
             name: '爱优网盘',
         },
         'feimaoyun': {
-            reg: /((?:https?:\/\/)?(?:www\.feimaoyun\.com|jmj.cc)\/s\/[0-9a-zA-Z]+)/,
+            reg: /((?:https?:\/\/)?www\.feimaoyun\.com\/s\/[0-9a-zA-Z]+)/,
             host: /www\.feimaoyun\.com/,
             name: '飞猫盘',
         },

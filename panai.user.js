@@ -175,6 +175,14 @@
             name: '123云盘',
             storage: 'hash'
         },
+        '123pan2': {
+            reg: /((?:https?:\/\/)?www\.123684\.com\/s\/[\w-]{6,})/,
+            host: /www\.123684\.com/,
+            input: ['.ca-fot input', ".appinput .appinput"],
+            button: ['.ca-fot button', ".appinput button"],
+            name: '123云盘',
+            storage: 'hash'
+        },
         '360': {
             reg: /((?:https?:\/\/)?(?:[a-zA-Z\d\-.]+)?(?:yunpan\.360\.cn|yunpan\.com)(\/lk)?\/surl_\w{6,})/,
             host: /[\w.]+?yunpan\.com/,

@@ -175,6 +175,22 @@
             name: '123云盘',
             storage: 'hash'
         },
+        ' 123684': {
+           reg: /((?:https?:\/\/)?www\.123864\.com\/s\/[\w-]+(?:\?.*)?)/,
+           host: /www\.123864\.com/,
+           input: ['.ca-fot input', ".appinput .appinput"],
+           button: ['.ca-fot button', ".appinput button"],
+           name: '123云盘分享链接1',
+           storage: 'hash'
+        },
+       ' 123685': {
+           reg: /((?:https?:\/\/)?www\.123865\.com\/s\/[\w-]+(?:\?.*)?)/,
+           host: /www\.123865\.com/,
+           input: ['.ca-fot input', ".appinput .appinput"],
+           button: ['.ca-fot button', ".appinput button"],
+           name: '123云盘分享链接2',
+           storage: 'hash'
+        },
         '360': {
             reg: /((?:https?:\/\/)?(?:[a-zA-Z\d\-.]+)?(?:yunpan\.360\.cn|yunpan\.com)(\/lk)?\/surl_\w{6,})/,
             host: /[\w.]+?yunpan\.com/,

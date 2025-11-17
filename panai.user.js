@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name              网盘智能识别助手（持续更新版）
 // @namespace         panAI
-// @version           3.0.1
+// @version           3.0.2
 // @author            YouXiaoHou,52fisher,xiaofeiTM233
 // @description       智能识别选中文字中的🔗网盘链接和🔑提取码，识别成功打开网盘链接并自动填写提取码，省去手动复制提取码在输入的烦恼。支持识别 ✅百度网盘 ✅阿里云盘 ✅腾讯微云 ✅蓝奏云 ✅天翼云盘 ✅移动云盘 ✅迅雷云盘 ✅123云盘 ✅360云盘 ✅115网盘 ✅奶牛快传 ✅城通网盘 ✅夸克网盘 ✅Google云端硬盘 ✅FlowUs息流 ✅Chrome 扩展商店 ✅Edge 扩展商店 ✅Firefox 扩展商店 ✅Windows 应用商店。
 // @license           AGPL-3.0-or-later
@@ -185,6 +185,7 @@
             input: ['.ca-fot input', ".appinput .appinput"],
             button: ['.ca-fot button', ".appinput button"],
             name: '123云盘',
+            replaceHost: "www.123pan.com",
             storage: 'hash'
         },
         '360': {
@@ -301,6 +302,11 @@
             host: /www\.567inc\.cn/,
             name: '567盘',
             replaceHost: "www.567inc.com",
+        },
+        'seewopinco': {
+            reg: /((?:https?:\/\/)?pinco\.seewo\.com\/s\/[0-9a-zA-Z]+)/,
+            host: /www\.ayunpan\.com/,
+            name: '希沃品课',
         },
         'ayunpan': {
             reg: /((?:https?:\/\/)?www\.ayunpan\.com\/file-\d+\.html)/,

@@ -15,9 +15,6 @@
   <img src="https://img.shields.io/badge/Chrome-≥76.0-brightgreen.svg" alt="chrome">
   <img src="https://img.shields.io/badge/Edge-≥88.0-brightgreen.svg" alt="edge">
   <img src="https://img.shields.io/badge/Platform-Windows%20%7C%20Mac%20%7C%20Linux-blue.svg" alt="platform">
-  <a href="https://www.youxiaohou.com" title="点击访问">
-    <img src="https://img.shields.io/badge/Author-油小猴-red.svg">
-  </a>
 </p>
 
 <div align="center">
@@ -37,7 +34,9 @@
 
 ## 💽 安装地址
 
-- **[安装地址（推荐）](https://www.youxiaohou.com/tool/install-panai.html)**
+- **[安装地址（源地址）](https://raw.githubusercontent.com/xiaofeiTM233/panAI/main/panai.user.js)**
+- **[安装地址（jsdelivr镜像地址）](https://cdn.jsdelivr.net/gh/xiaofeiTM233/panAI@main/panai.user.js)**
+- **[安装地址（ghproxy镜像地址）](https://ghproxy.net/https://raw.githubusercontent.com/xiaofeiTM233/panAI/main/panai.user.js)**
 
 ## 📖 使用说明
 
@@ -47,71 +46,21 @@
 
 ![](https://pic.rmb.bdstatic.com/bjh/623aeea319185cc50289483a8614118b1805.png)
 
-## 📖 更新日志
-
-**v1.9.5** 添加对 **新浪微盘/文叔叔网盘/14个小众网盘** 链接的识别 #31；修复链接中含有pwd字段时优先使用该字段作为密码 #22。感谢 [@52fisher](https://github.com/52fisher)。
-
-**v1.9.1** 添加对 **Mega网盘** 链接的识别 #22 支持自定义识别快捷键 #30；修复蓝奏云识别错误 #23 错误的识别链接 #16。感谢 [@52fisher](https://github.com/52fisher)。
-
-**v1.8.9** 添加对阿里云盘新域名 www.alipan.com 分享链接的支持。
-
-**v1.8.6** 增强选中文字含有超链接时的识别能力。感谢 [@taozhiyu](https://github.com/taozhiyu)。
-
-**v1.8.5** 增强对移动云盘的识别的识别能力。
-
-**v1.8.4** 提升对提取码的识别能力，能更智能的识别提取码。
-
-**v1.8.3** 添加对 **FlowUs息流** 链接的识别；**弹出提示时按下 Enter 回车键可以快速打开，按下 Esc 键可以关闭弹窗提示**。
-
-**v1.8.1** 更换更清晰的图标。新增对 **Mircosoft 应用商店**链接的识别，选中后自动跳转到对应可直接访问的镜像站点。[选中我试试看](https://apps.microsoft.com/store/detail/wechat-for-windows/9NBLGGH4SLX7)。
-
-**v1.8.0** 添加对 **百度企业网盘，百度网盘文档，115网盘，奶牛快传，城通网盘，夸克网盘** 链接的识别。
-
-**v1.7.0** 添加剪切板文本识别，可在脚本菜单中选择 `识别剪切板中文字`（可以按 F1 快速打开），在弹出的窗口中粘贴需要识别的链接。
-
-**v1.6.0** 添加对 **360云盘** 链接的识别，新增对 **Chrome 扩展商店，Edge 扩展商店，Firefox 扩展商店**链接的识别，选中后自动跳转到对应可直接访问的镜像站点。[选中我试试看](https://chrome.google.com/webstore/detail/tampermonkey/dhdgffkkebhmkfjojejmpbldmpobfkfo)。
-
-**v1.5.6** 支持将链接中含“点”自动替换为“.”后识别，加强阿里云盘的识别。
-
-**v1.5.4** 修复链接本身包含提取码无法识别的问题，如 https://pan.baidu.com/s/xxxx?**pwd=1234**。
-
-**v1.5.2** CDN 从 cdn.jsdelivr.net 替换为 unpkg.com。
-
-**v1.5.1** 支持识别到 lanzous.com，就自动转换到可以访问的域名 lanzouw.com
-
-**v1.5.0** 添加对 **123云盘** 链接的识别，支持超链接形式的识别（[选中密码和我试试看](https://www.lanzoui.com/b00t5sclg) 密码:d8f9）。
-
-**v1.4.3** 增强对蓝奏云新链接的识别。
-
-**v1.4.2** 增强对蓝奏云链接的识别。
-
-**v1.4.1** 添加对阿里云盘短链接 alywp.net 的识别，增强对蓝奏云自定义链接的识别。
-
-**v1.4.0** 添加对 **阿里云盘** 链接的识别，见测试链接 - 阿里云盘。
-
-**v1.3.2** 支持识别更多天翼云盘链接格式。
-
-**v1.3.1** 支持识别到 lanzous.com，就自动转换到可以访问的域名 lanzoui.com
-
-**v1.3.0** 添加了对 **迅雷网盘** 链接的识别，改进了对链接中含有零宽度字符时无法识别的问题，修复和彩云无法自动填写的 Bug。
-
-**v1.2.0** 修复了设置选项出现在 iframe 里的情况，优化了自动点击提交按钮的逻辑。
-
-**v1.1.1** 修正了在部分网站上样式无法加载的问题。
-
-**v1.1.0** 修正了弹出框在百度搜索上样式错乱的问题，部分网站弹出框被覆盖的问题，支持 iframe 网页内识别。
-
-**v1.0.6** 支持对 `http删s://pan.b厨aidu.co次m/s/xxxx闷xxx` 这种中间含有汉字等特殊符号的识别。
-
-**v1.0.5** 支持连续识别，增强对百度网盘的链接识别。
-
-**v1.0.3** 增强识别准确度，对提取码判断更加准确。
-
-**v1.0.2** 添加对不带 https 的链接识别，修复部分网站设置弹出框字体过大的提示。
-
-**v1.0.1** 添加对 **和彩云** 链接的识别。
-
-**v1.0.0** 添加对 **百度网盘，腾讯微云，蓝奏云，天翼云盘** 链接的识别。
+## 📖 添加自定义网盘的参数说明
+line111行,使用opt对象来管理所有支持的网盘列表和信息，opt的key即为不同网站的名称缩写，key的子对象即为该网站的具体配置，参数说明如下：
+```javascript
+'noire': {
+reg: /(?:https?:\/\/)?drive.noire.cc\/s\/\w+/, //网盘链接的正则表达式，用于匹配链接
+host: /drive\.noire\.cc/,//网盘链接的host，用于匹配链接
+input: ['#pwd'], //密码输入框的选择器，用于获取密码输入框的元素
+button: ['button.MuiButton-containedSecondary'],//密码输入框的确认按钮的选择器，用于获取确认按钮的元素
+name: '爱丽丝的记事本',//网盘名称
+storage: 'local',//密码存储方式，可选local或hash，使用hash时会在链接中添加pwd参数和pwd的hash，使用local时会在本地存储密码
+storagePwdName: 'tmp_noire_pwd',//密码存储的名称，使用local方式存储密码能通过该值获取对应的密码
+originalLink:true,//是否保留原始链接，当参数值为true时，会保留原始链接，不会拼接pwd参数和pwd的hash，以解决部分网站路由跳转不对的问题
+replaceHost: 'drive.noire.cc',//替换链接的host，用于替换链接中的host，解决部分网站路由跳转不对的问题
+},
+```
 
 ## 🎨 GIF演示
 
